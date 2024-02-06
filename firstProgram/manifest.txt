@@ -1,2 +1,2 @@
-Main-class: welcomednr
+Main-Class: welcomednr
 
