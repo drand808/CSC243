@@ -1,3 +1,16 @@
+/*
+Author:        Dominic Rando
+Major:         Computer Science
+Creation Date: February 13, 2024
+Due Date:      February 14, 2024
+Course:        CSC 243
+Professor:     Dr. DeMarco
+Assignment:    Program 1
+Filename:      program1dnr.java
+Purpose:       Takes the number of years until retirement and the money saved annually
+               and outputs the money they will have at retirement with compound interest
+*/
+
 import java.util.Scanner;
 
 public class program1dnr {
@@ -26,6 +39,13 @@ public class program1dnr {
     System.out.println("Money at retirement: $" + moneyRetirementRounded);
   }
   
+  /*
+  Function Name:	getIntInput
+  Description:	  Prompts user for an int until it is supplied
+  Parameters:     input: allows program to grab values from cmd line - input/export
+                  prompt: message displayed to user - input
+  Return Value:	  int - number user inputted
+  */
   private static int getIntInput(Scanner input, String prompt){
     int num;
     // Loop until valid input
@@ -36,8 +56,15 @@ public class program1dnr {
     return num;
   }
   
-  private static int promptForInt(Scanner input, String message){
-    System.out.print(message);
+  /*
+  Function Name:	promptForInt
+  Description:	  Prompts user for an value and tests if it is an int
+  Parameters:     input: allows program to grab values from cmd line - input/export
+                  prompt: message displayed to user - input
+  Return Value:	  int - number user inputted or -1 if non-int supplied
+  */
+  private static int promptForInt(Scanner input, String prompt){
+    System.out.print(prompt);
     // Test if input is an integer
     try {
       return input.nextInt();
@@ -49,6 +76,13 @@ public class program1dnr {
     }
   }
   
+  /*
+  Function Name:	validateIntegerInput
+  Description:	  Tests user input is greater than an int constraint
+  Parameters:     inputNum: user input int - input
+                  constraint: number input must be greater than - input
+  Return Value:	  boolean - true is constraint satisfied, false otherwise
+  */
   private static boolean validateIntegerInput(int inputNum, int constraint){
     if (inputNum > constraint){
       return true;
