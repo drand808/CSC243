@@ -28,6 +28,7 @@ public class program1dnr {
   
   private static int getIntInput(Scanner input, String prompt){
     int num;
+    // Loop until valid input
     do {
       num = promptForInt(input, prompt);
     }
