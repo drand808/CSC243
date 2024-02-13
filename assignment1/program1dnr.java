@@ -19,8 +19,11 @@ public class program1dnr {
     // Calculate retirement money
     double moneyRetirement = money * (Math.pow(INTEREST_RATE, years));
     
+    // Round money to two decimal places
+    double moneyRetirementRounded = Math.round(moneyRetirement * 100.0)/100.0;
+    
     // Display results
-    System.out.println("Money at retirement: $" + moneyRetirement);
+    System.out.println("Money at retirement: $" + moneyRetirementRounded);
   }
   
   private static int getIntInput(Scanner input, String prompt){
@@ -34,6 +37,7 @@ public class program1dnr {
   
   private static int promptForInt(Scanner input, String message){
     System.out.print(message);
+    // Test if input is an integer
     try {
       return input.nextInt();
     }
