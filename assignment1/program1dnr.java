@@ -25,6 +25,7 @@ public class program1dnr {
   
   private static int getIntInput(Scanner input, String prompt){
     int num;
+    // Loop until valid input
     do {
       num = promptForInt(input, prompt);
     }
@@ -34,6 +35,7 @@ public class program1dnr {
   
   private static int promptForInt(Scanner input, String message){
     System.out.print(message);
+    // test input
     try {
       return input.nextInt();
     }
