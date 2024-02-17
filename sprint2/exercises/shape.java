@@ -1,15 +1,4 @@
-/*
-Author:        Dominic Rando
-Major:         Computer Science
-Creation Date: February 13, 2024
-Due Date:      February 14, 2024
-Course:        CSC 243
-Professor:     Dr. DeMarco
-Assignment:    Program 1
-Filename:      program1dnr.java
-Purpose:       Takes the number of years until retirement and the money saved annually
-               and outputs the money they will have at retirement with compound interest
-*/
+// Exercise from Chapter 3 page 34
 
 import java.util.Scanner;
 
@@ -36,42 +25,38 @@ public class shape {
     printResults(perimeter, area, lengthOfDiagonal);
   }
   
+  private static void printResults(double perimeter, double area, double lengthOfDiagonal){
+    // Display results
+    System.out.println("Perimeter: \t" + perimeter);
+    System.out.println("Area: \t\t" + area);
+    System.out.println("Diagonal: \t" + lengthOfDiagonal);
+    printSize(area);
+  }
+  
   private static void printSize(double area){
-    int areaModified = int(area/100);
+    int areaModified = (int)(area/100);
     switch(areaModified) {
       case 1: 
         System.out.println("The size is small");
+        break;
       case 2:
         System.out.println("The size is medium");
+        break;
       case 3:
         System.out.println("The size is large");
+        break;
       case 4:
         System.out.println("The size is XLarge");
-      case 5:
-        System.out.println("The size is HUGE");
+        break;
       default:
-        System.out.println("Rectangle is too small!");
+        if (areaModified>5) {
+          System.out.println("The size is Huge");
+        } else {
+          System.out.println("Rectangle is too small!");
+        }
     }
-    
-    
   }
   
-  private static void printResults(double perimeter, double area, double, lengthOfDiagonal){
-    // Display results
-    System.out.println("Perimeter: \t" + perimeter);
-    System.out.println("Area: \t" + area);
-    System.out.println("Diagonal: \t" + lengthOfDiagonal);
-    
-    
-  }
-  
-  /*
-  Function Name:	getIntInput
-  Description:	  Prompts user for an int until it is supplied
-  Parameters:     input: allows program to grab values from cmd line - input/export
-                  prompt: message displayed to user - input
-  Return Value:	  int - number user inputted
-  */
   private static double[] getInputDouble2(Scanner input, String prompt){
     double width = -1;
     double height = -1;
@@ -84,14 +69,7 @@ public class shape {
     while (!validateInputDouble(width, height, 0));
     return new double[]{width, height};
   }
-  
-  /*
-  Function Name:	promptForInt
-  Description:	  Prompts user for an value and tests if it is an int
-  Parameters:     input: allows program to grab values from cmd line - input/export
-                  prompt: message displayed to user - input
-  Return Value:	  int - number user inputted or -1 if non-int supplied
-  */
+
   private static double getNextInputDouble(Scanner input){
     // Test if input is an integer
     try {
@@ -103,14 +81,7 @@ public class shape {
       return -1;
     }
   }
-  
-  /*
-  Function Name:	validateIntegerInput
-  Description:	  Tests user input is greater than an int constraint
-  Parameters:     inputNum: user input int - input
-                  constraint: number input must be greater than - input
-  Return Value:	  boolean - true is constraint satisfied, false otherwise
-  */
+
   private static boolean validateInputDouble(double inputNum1, double inputNum2, double constraint){
     if (inputNum1 > constraint && inputNum2 > constraint){
       return true;
