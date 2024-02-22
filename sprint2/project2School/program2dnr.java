@@ -30,11 +30,50 @@ public class program2dnr {
     monthData[5] = extraMoney[0];
     monthData[6] = extraMoney[1];
     monthData[7] = extraMoney[2];
+    yearData = updateMonth(yearData, monthData, 0);
     
     // Loop through the rest of the months
     for(int month = 1; month < 12; month++){
+      // display data so far
+      printYear(yearData, month);
+      
+      // Let user update values
+      
+      // Add new values to this thing
+      yearData = updateMonth(yearData, monthData, month);
       continue;
     }
+    printYear(yearData, 12);
+  }
+  
+  private static double[][] updateMonth(double[][] yearData, double[] monthData, int month){
+    for(int category = 0; category < 8; category++){
+      yearData[category][month] = monthData[category];
+    }
+    return yearData;
+  }
+  
+  private static void printYear(double[][] yearData, int month){
+    String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", 
+                          "Aug", "Sep", "Oct", "Nov", "Dec"};
+    String[] categoryNames = {"Salary", "Rent", "Car", "Gas", "Food",
+                              "Savings", "Fun", "Total"};
+    System.out.print("Cat.\t");
+    // Print month names
+    for(int i = 0; i < month; i++){
+      System.out.print(monthNames[i] + "\t");
+    }
+    System.out.println("");
+    
+    // Print data
+    for(int category = 0; category < 8; category++){
+      System.out.print(categoryNames[category] + "\t");
+      for(int i = 0; i < month; i++){
+        System.out.print(yearData[category][i] + "\t");
+      }
+      System.out.println("");
+    }
+    System.out.println("");
   }
   
   private static double[] getDisposableIncome(double[] monthData, double savingsPercent){
