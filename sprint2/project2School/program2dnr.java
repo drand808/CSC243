@@ -7,6 +7,14 @@ public class program2dnr {
   // split checking double value into two functions, and check both in while loop
   //   - validateDouble, validateDoubleValue. Check for oduble input first, then number
   // throw error when values exceed income. don't stop them, just tell them they're losing money
+  /*
+  format yearly table like: 
+  --------------
+  |Yearly table|
+  |cat. months |
+  --------------
+  maybe without 
+  */
   
   public static void main(String[] args) { 
     // Create a Scanner
