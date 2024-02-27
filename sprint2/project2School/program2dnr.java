@@ -1,20 +1,9 @@
 import java.util.Scanner;
 
 public class program2dnr {
-  // numbers can be >= 0, like paying off your car payment
-  // they can change the savings percentage
   // make functions public
   // split checking double value into two functions, and check both in while loop
-  //   - validateDouble, validateDoubleValue. Check for oduble input first, then number
-  // throw error when values exceed income. don't stop them, just tell them they're losing money
-  /*
-  format yearly table like: 
-  --------------
-  |Yearly table|
-  |cat. months |
-  --------------
-  maybe without 
-  */
+  //   - validateDouble, validateDoubleValue. Check for double input first, then number
   
   public static void main(String[] args) { 
     // Create a Scanner
@@ -27,14 +16,15 @@ public class program2dnr {
     // {salary, rent, car, gas, food, savings, fun, total, percentage}
     double[] monthData = new double[9];
     monthData = getFirstMonth(input);
-    // put savings percent and extramoney expressions into get firt month so it reads:
-    // monthData = getFirstMonth(input);
-    // yearData = updateMonth(yearData, monthData, 0);
+
+    // Update year for first month
     yearData = updateMonth(yearData, monthData, 0);
     
     boolean exitFlag = false;
-    input.nextLine();
+    input.nextLine(); // clear random input
     
+    // {salary, rent, car, gas, food, percentage}
+    boolean[] categoryChanged = new boolean[9];
     // Loop through the rest of the months
     for(int month = 1; month < 12; month++){
       // check if user wants to exit
@@ -51,6 +41,7 @@ public class program2dnr {
       String choice = "";
       do{  
         
+        // Throw warning that 
         checkTotal(monthData);
         
         // display menu
@@ -62,28 +53,35 @@ public class program2dnr {
         System.out.println("F)ood");
         System.out.println("P)ercentage for savings");
         System.out.println("V)alues for next month");
+        System.out.println("Y)ear table");
         System.out.println("N)ext month");
         System.out.println("E)xit the year");
         
         choice = input.nextLine();
         switch(choice.toLowerCase()) {
           case "s":
-            monthData = updateCategory(input, monthData, 0);
+            monthData = updateCategory(input, monthData, categoryChanged, 0);
+            categoryChanged[0] = true;
             break;
           case "r":
-            monthData = updateCategory(input, monthData, 1);
+            monthData = updateCategory(input, monthData, categoryChanged, 1);
+            categoryChanged[1] = true;
             break;
           case "c":
-            monthData = updateCategory(input, monthData, 2);
+            monthData = updateCategory(input, monthData, categoryChanged, 2);
+            categoryChanged[2] = true;
             break;
           case "g":
-            monthData = updateCategory(input, monthData, 3);
+            monthData = updateCategory(input, monthData, categoryChanged, 3);
+            categoryChanged[3] = true;
             break;
           case "f":
-            monthData = updateCategory(input, monthData, 4);
+            monthData = updateCategory(input, monthData, categoryChanged, 4);
+            categoryChanged[4] = true;
             break;
           case "p":
-            monthData = updateCategory(input, monthData, 8);
+            monthData = updateCategory(input, monthData, categoryChanged, 8);
+            categoryChanged[8] = true;
             break;
           case "v":
             printCurrentMonth(monthData, month);
@@ -111,8 +109,9 @@ public class program2dnr {
                           "Aug", "Sep", "Oct", "Nov", "Dec"};
     String[] categoryNames = {"Salary", "Rent", "Car", "Gas", "Food",
                               "Savings", "Fun", "Total"};
-    
-    System.out.println("\nCat.\t" + monthNames[month]);
+    System.out.println("\nTable for Next Month");
+    System.out.println("----------------------");
+    System.out.println("Cat.\t" + monthNames[month]);
     
     // Print data
     for(int category = 0; category < 8; category++){
@@ -130,7 +129,11 @@ public class program2dnr {
     }
   }
   
-  public static double[] updateCategory(Scanner input, double[] monthData, int category){
+  public static double[] updateCategory(Scanner input, double[] monthData, boolean[] categoryChanged, int category){
+    if (categoryChanged[category]){
+      System.out.println("You have already changed that category this year");
+      return monthData;
+    }
     double num = getInputDouble(input, "- New value: ");
     if (num != -1){
       monthData[category] = num;
@@ -153,7 +156,9 @@ public class program2dnr {
                           "Aug", "Sep", "Oct", "Nov", "Dec"};
     String[] categoryNames = {"Salary", "Rent", "Car", "Gas", "Food",
                               "Savings", "Fun", "Total"};
-    System.out.print("\nCat.\t");
+    System.out.println("\nTable for the Year");
+    System.out.println("------------------");
+    System.out.print("Cat.\t");
     // Print month names
     for(int i = 0; i < month; i++){
       System.out.print(monthNames[i] + "\t");
@@ -206,7 +211,7 @@ public class program2dnr {
   }
   
   private static double getInputDouble(Scanner input, String prompt){
-    double num = -1.0;
+    double num = 0.0;
     // Loop until valid input
     do {
       System.out.print(prompt);
@@ -229,7 +234,7 @@ public class program2dnr {
   }
 
   private static boolean validateInputDouble(double inputNum1, double constraint){
-    if (inputNum1 > constraint){
+    if (inputNum1 >= constraint){
       return true;
     }
     System.out.println(" > ERROR: Please enter a number greater than " + constraint);
