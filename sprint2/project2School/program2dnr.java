@@ -2,8 +2,10 @@ import java.util.Scanner;
 
 public class program2dnr {
   // make functions public
-  // split checking double value into two functions, and check both in while loop
-  //   - validateDouble, validateDoubleValue. Check for double input first, then number
+  // update salary and fun to equal 0 when when they are negative
+  // This should change it so that the total represents a negative value
+  // move functions to a nice order
+  // put updating the yearly table into a function to lower clutter in main
   
   public static void main(String[] args) { 
     // Create a Scanner
@@ -134,7 +136,7 @@ public class program2dnr {
       System.out.println("You have already changed that category this year");
       return monthData;
     }
-    double num = getInputDouble(input, "- New value: ");
+    double num = getInputDouble(input, "- New value: ", 0.0);
     if (num != -1){
       monthData[category] = num;
     }
@@ -143,7 +145,7 @@ public class program2dnr {
     return monthData;
   }
   
-  private static double[][] updateMonth(double[][] yearData, double[] monthData, int month){
+  public static double[][] updateMonth(double[][] yearData, double[] monthData, int month){
     monthData = updateDisposableIncome(monthData, monthData[8]);
     for(int category = 0; category < 8; category++){
       yearData[category][month] = monthData[category];
@@ -151,7 +153,7 @@ public class program2dnr {
     return yearData;
   }
   
-  private static void printYear(double[][] yearData, int month){
+  public static void printYear(double[][] yearData, int month){
     String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", 
                           "Aug", "Sep", "Oct", "Nov", "Dec"};
     String[] categoryNames = {"Salary", "Rent", "Car", "Gas", "Food",
@@ -175,7 +177,7 @@ public class program2dnr {
     }
   }
   
-  private static double[] updateDisposableIncome(double[] monthData, double savingsPercent){
+  public static double[] updateDisposableIncome(double[] monthData, double savingsPercent){
     double expenses = 0.0;
     for(int category = 1; category < 5; category++){
       expenses += monthData[category];
@@ -192,52 +194,44 @@ public class program2dnr {
     return monthData;
   }
   
-  private static double[] getFirstMonth(Scanner input){
-    double salary = getInputDouble(input, "Enter monthly salary: ");
-    double rent = getInputDouble(input, "Enter monthly rent: ");
-    double car = getInputDouble(input, "Enter monthly car: ");
-    double gas = getInputDouble(input, "Enter monthly gas: ");
-    double food = getInputDouble(input, "Enter monthly food: ");
+  public static double[] getFirstMonth(Scanner input){
+    double salary = getInputDouble(input, "Enter monthly salary: ", 0.0);
+    double rent = getInputDouble(input, "Enter monthly rent: ", 0.0);
+    double car = getInputDouble(input, "Enter monthly car: ", 0.0);
+    double gas = getInputDouble(input, "Enter monthly gas: ", 0.0);
+    double food = getInputDouble(input, "Enter monthly food: ", 0.0);
     double[] monthData = {salary, rent, car, gas, food, 0, 0, 0, 0};
     
     // Get savings percent
-    double savingsPercent = getInputDouble(input, "Enter savings percentage (ex: 20.5): ");
+    double savingsPercent = getInputDouble(input, "Enter savings percentage (ex: 20.5): ", 0.0);
     
     // Get savings and fun based off salary and savingsPercent
-    // Restructure to update the monthData directly? monthData = updateForExtraMoney
     monthData = updateDisposableIncome(monthData, savingsPercent);
     
     return monthData;
   }
   
-  private static double getInputDouble(Scanner input, String prompt){
+  public static double getInputDouble(Scanner input, String prompt, double minValue){
     double num = 0.0;
     // Loop until valid input
-    do {
-      System.out.print(prompt);
-      num = getNextInputDouble(input);
+    while (true){
+      try {
+        System.out.print(prompt);
+        num = input.nextDouble();
+        
+        // validate input
+        if (num >= minValue){
+          break;
+        } 
+        else{
+          System.out.println("> ERROR: Please enter a number greater than " + minValue);
+        }
+      } 
+      catch (Exception e){
+        System.out.println("> ERROR: Please enter a double");
+        input.nextLine(); // Removes input from the line, assume one-line input
+      }
     }
-    while (!validateInputDouble(num, 0.0));
     return num;
-  }
-
-  private static double getNextInputDouble(Scanner input){
-    // Test if input is an integer
-    try {
-      return input.nextDouble();
-    }
-    catch (Exception e){
-      System.out.println(" > ERROR: Please make sure you are entering a number");
-      input.nextLine(); // Removes input from the line, assume one-line input
-      return -1;
-    }
-  }
-
-  private static boolean validateInputDouble(double inputNum1, double constraint){
-    if (inputNum1 >= constraint){
-      return true;
-    }
-    System.out.println(" > ERROR: Please enter a number greater than " + constraint);
-    return false;
   }
 }
