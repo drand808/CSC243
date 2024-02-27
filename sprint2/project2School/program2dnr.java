@@ -4,9 +4,9 @@ public class program2dnr {
   // numbers can be >= 0, like paying off your car payment
   // they can change the savings percentage
   // make functions public
-  // that's a bold statement, why do you think that
   // split checking double value into two functions, and check both in while loop
   //   - validateDouble, validateDoubleValue. Check for oduble input first, then number
+  // throw error when values exceed income. don't stop them, just tell them they're losing money
   
   public static void main(String[] args) { 
     // Create a Scanner
@@ -16,28 +16,72 @@ public class program2dnr {
     double[][] yearData = new double[8][12];
     
     // Get initial data
-    // {salary, rent, car, gas, food, savings, fun, total}
-    double[] monthData = new double[8];
+    // {salary, rent, car, gas, food, savings, fun, total, percentage}
+    double[] monthData = new double[9];
     monthData = getFirstMonth(input);
-    
-    // Get savings percent
-    double savingsPercent = getInputDouble(input, "Enter savings percentage (ex: 20.5): ");
-    
-    // Get savings and fun based off salary and savingsPercent
-    // Restructure to update the monthData directly? monthData = updateForExtraMoney
-    double[] extraMoney = getDisposableIncome(monthData, savingsPercent);
-    System.out.println("savings: " + extraMoney[0] + "\nFun: " + extraMoney[1] + "\nTotal: " + extraMoney[2]);
-    monthData[5] = extraMoney[0];
-    monthData[6] = extraMoney[1];
-    monthData[7] = extraMoney[2];
+    // put savings percent and extramoney expressions into get firt month so it reads:
+    // monthData = getFirstMonth(input);
+    // yearData = updateMonth(yearData, monthData, 0);
     yearData = updateMonth(yearData, monthData, 0);
     
+    boolean exitFlag = false;
+    
     // Loop through the rest of the months
+    String trash = input.nextLine();
     for(int month = 1; month < 12; month++){
-      // display data so far
-      printYear(yearData, month);
+      // check if user wants to exit
+      if (exitFlag){
+        yearData = updateMonth(yearData, monthData, month);
+        continue;
+      }
       
-      // Let user update values
+      // Let user update values. return yearValue? but I have to handle exitFlag
+      boolean continueFlag = false;
+      String choice = "";
+      do{  
+      
+        // display data so far
+        printYear(yearData, month);
+        
+        checkTotal(monthData);
+        
+        // display menu
+        System.out.println("\nChoose a category to change:");
+        System.out.println("S)alary");
+        System.out.println("R)ent");
+        System.out.println("C)ar");
+        System.out.println("G)as");
+        System.out.println("F)ood");
+        System.out.println("P)ercentage for savings");
+        System.out.println("CO)ntinue to next month");
+        System.out.println("E)xit the year");
+        
+        choice = input.nextLine();
+        switch(choice.toLowerCase()) {
+          case "s":
+            monthData = updateCategory(input, monthData, 0);
+            break;
+          case "r":
+            monthData = updateCategory(input, monthData, 1);
+            break;
+          case "c":
+            monthData = updateCategory(input, monthData, 2);
+            break;
+          case "g":
+            monthData = updateCategory(input, monthData, 3);
+            break;
+          case "f":
+            monthData = updateCategory(input, monthData, 4);
+            break;
+          case "p":
+            monthData = updateCategory(input, monthData, 8);
+          case "e":
+            exitFlag = true;
+            break;
+          default:
+            System.out.println("Please enter a valid value");
+        }
+      } while (!choice.equals("co") && !choice.equals("e"));
       
       // Add new values to this thing
       yearData = updateMonth(yearData, monthData, month);
@@ -46,7 +90,25 @@ public class program2dnr {
     printYear(yearData, 12);
   }
   
+  public static void checkTotal(double[] monthData){
+    double savings = monthData[5];
+    double fun = monthData[6];
+    if (savings < 0 || fun < 0){
+      System.out.println("WARNING: current costs exceed salary");
+    }
+  }
+  
+  public static double[] updateCategory(Scanner input, double[] monthData, int category){
+    System.out.print("- New value: ");
+    double num = getNextInputDouble(input);
+    if (num != -1){
+      monthData[category] = num;
+    }
+    return monthData;
+  }
+  
   private static double[][] updateMonth(double[][] yearData, double[] monthData, int month){
+    monthData = updateDisposableIncome(monthData, monthData[8]);
     for(int category = 0; category < 8; category++){
       yearData[category][month] = monthData[category];
     }
@@ -58,7 +120,7 @@ public class program2dnr {
                           "Aug", "Sep", "Oct", "Nov", "Dec"};
     String[] categoryNames = {"Salary", "Rent", "Car", "Gas", "Food",
                               "Savings", "Fun", "Total"};
-    System.out.print("Cat.\t");
+    System.out.print("\nCat.\t");
     // Print month names
     for(int i = 0; i < month; i++){
       System.out.print(monthNames[i] + "\t");
@@ -76,7 +138,7 @@ public class program2dnr {
     System.out.println("");
   }
   
-  private static double[] getDisposableIncome(double[] monthData, double savingsPercent){
+  private static double[] updateDisposableIncome(double[] monthData, double savingsPercent){
     double expenses = 0.0;
     for(int category = 1; category < 5; category++){
       expenses += monthData[category];
@@ -85,7 +147,12 @@ public class program2dnr {
     double savings = disposableIncome * (savingsPercent/100);
     double fun = disposableIncome - savings;
     double total = expenses + savings + fun;
-    return new double[] {savings, fun, total};
+    monthData[5] = savings;
+    monthData[6] = fun;
+    monthData[7] = total;
+    monthData[8] = savingsPercent;
+    
+    return monthData;
   }
   
   private static double[] getFirstMonth(Scanner input){
@@ -94,7 +161,16 @@ public class program2dnr {
     double car = getInputDouble(input, "Enter monthly car: ");
     double gas = getInputDouble(input, "Enter monthly gas: ");
     double food = getInputDouble(input, "Enter monthly food: ");
-    return new double[] {salary, rent, car, gas, food, 0, 0, 0};
+    double[] monthData = {salary, rent, car, gas, food, 0, 0, 0, 0};
+    
+    // Get savings percent
+    double savingsPercent = getInputDouble(input, "Enter savings percentage (ex: 20.5): ");
+    
+    // Get savings and fun based off salary and savingsPercent
+    // Restructure to update the monthData directly? monthData = updateForExtraMoney
+    monthData = updateDisposableIncome(monthData, savingsPercent);
+    
+    return monthData;
   }
   
   private static double getInputDouble(Scanner input, String prompt){
