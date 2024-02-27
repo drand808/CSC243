@@ -25,9 +25,9 @@ public class program2dnr {
     yearData = updateMonth(yearData, monthData, 0);
     
     boolean exitFlag = false;
+    input.nextLine();
     
     // Loop through the rest of the months
-    String trash = input.nextLine();
     for(int month = 1; month < 12; month++){
       // check if user wants to exit
       if (exitFlag){
@@ -35,13 +35,13 @@ public class program2dnr {
         continue;
       }
       
+      // display data so far
+      printYear(yearData, month);
+      
       // Let user update values. return yearValue? but I have to handle exitFlag
       boolean continueFlag = false;
       String choice = "";
       do{  
-      
-        // display data so far
-        printYear(yearData, month);
         
         checkTotal(monthData);
         
@@ -53,7 +53,8 @@ public class program2dnr {
         System.out.println("G)as");
         System.out.println("F)ood");
         System.out.println("P)ercentage for savings");
-        System.out.println("CO)ntinue to next month");
+        System.out.println("V)alues for next month");
+        System.out.println("N)ext month");
         System.out.println("E)xit the year");
         
         choice = input.nextLine();
@@ -75,19 +76,42 @@ public class program2dnr {
             break;
           case "p":
             monthData = updateCategory(input, monthData, 8);
+            break;
+          case "v":
+            printCurrentMonth(monthData, month);
+            break;
+          case "y":
+            printYear(yearData, month);
+            break;
           case "e":
             exitFlag = true;
             break;
           default:
-            System.out.println("Please enter a valid value");
+            System.out.println("Please enter a valid value, got " + choice);
         }
-      } while (!choice.equals("co") && !choice.equals("e"));
+      } while (!choice.equals("n") && !choice.equals("e"));
       
       // Add new values to this thing
       yearData = updateMonth(yearData, monthData, month);
       continue;
     }
     printYear(yearData, 12);
+  }
+  
+  public static void printCurrentMonth(double[] monthData, int month){
+    String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", 
+                          "Aug", "Sep", "Oct", "Nov", "Dec"};
+    String[] categoryNames = {"Salary", "Rent", "Car", "Gas", "Food",
+                              "Savings", "Fun", "Total"};
+    
+    System.out.println("\nCat.\t" + monthNames[month]);
+    
+    // Print data
+    for(int category = 0; category < 8; category++){
+      System.out.print(categoryNames[category] + "\t");
+      System.out.print(monthData[category] + "\t");
+      System.out.println("");
+    }
   }
   
   public static void checkTotal(double[] monthData){
@@ -99,11 +123,12 @@ public class program2dnr {
   }
   
   public static double[] updateCategory(Scanner input, double[] monthData, int category){
-    System.out.print("- New value: ");
-    double num = getNextInputDouble(input);
+    double num = getInputDouble(input, "- New value: ");
     if (num != -1){
       monthData[category] = num;
     }
+    monthData = updateDisposableIncome(monthData, monthData[8]);
+    input.nextLine();
     return monthData;
   }
   
@@ -135,7 +160,6 @@ public class program2dnr {
       }
       System.out.println("");
     }
-    System.out.println("");
   }
   
   private static double[] updateDisposableIncome(double[] monthData, double savingsPercent){
