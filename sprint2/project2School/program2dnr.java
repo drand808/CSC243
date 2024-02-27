@@ -1,17 +1,25 @@
+/*
+Author:        Dominic Rando
+Major:         Computer Science
+Creation Date: February 20, 2024
+Due Date:      February 28, 2024
+Course:        CSC 243
+Professor:     Dr. DeMarco
+Assignment:    Program 2
+Filename:      program1dnr.java
+Purpose:       Takes in the users monthly income and costs, then goes through every month
+               letting them make changes as needed. Then, the program will
+               display the values for the entire year
+*/
+
 import java.util.Scanner;
 
 public class program2dnr {
-  // make functions public
-  // update salary and fun to equal 0 when when they are negative
-  // This should change it so that the total represents a negative value
-  // move functions to a nice order
-  // put updating the yearly table into a function to lower clutter in main
-  
   public static void main(String[] args) { 
     // Create a Scanner
     Scanner input = new Scanner(System.in);
     
-    // Tell user the usage of program and that they are entering the first month
+    // Table for the entire year
     double[][] yearData = new double[8][12];
     
     // Get initial data
@@ -23,11 +31,84 @@ public class program2dnr {
     yearData = updateMonth(yearData, monthData, 0);
     
     boolean exitFlag = false;
-    input.nextLine(); // clear random input
     
     // {salary, rent, car, gas, food, percentage}
     boolean[] categoryChanged = new boolean[9];
-    // Loop through the rest of the months
+    
+    // Get the rest of the months
+    yearData = getYear(input, yearData, monthData);
+    printYear(yearData, 12);
+  }
+  
+  /*
+  Function Name:	getInputdouble
+  Description:	  Prompts user for a double until it is supplied
+  Parameters:     input: allows program to grab values from cmd line - input/export
+                  prompt: message displayed to user - input
+                  minValue: value the double must greater than or equal to - input
+  Return Value:	  double - number user inputted
+  */
+  public static double getInputDouble(Scanner input, String prompt, double minValue){
+    double num = 0.0;
+    // Loop until valid input
+    while (true){
+      try {
+        System.out.print(prompt);
+        num = input.nextDouble();
+        
+        // validate input
+        if (num >= minValue){
+          break;
+        } 
+        else{
+          System.out.println("> ERROR: Please enter a number greater than " + minValue);
+        }
+      } 
+      catch (Exception e){
+        System.out.println("> ERROR: Please enter a double");
+        input.nextLine(); // Removes input from the line, assume one-line input
+      }
+    }
+    input.nextLine(); // Consume new-line character from input
+    return num;
+  }
+  
+  /*
+  Function Name:	getFirstMonth
+  Description:	  Gets value for each category for the first month
+  Parameters:     input: allows program to grab values from cmd line - input/export
+  Return Value:	  double[] - the data for this month
+  */
+  public static double[] getFirstMonth(Scanner input){
+    double salary = getInputDouble(input, "Enter monthly salary: ", 0.0);
+    double rent = getInputDouble(input, "Enter monthly rent: ", 0.0);
+    double car = getInputDouble(input, "Enter monthly car: ", 0.0);
+    double gas = getInputDouble(input, "Enter monthly gas: ", 0.0);
+    double food = getInputDouble(input, "Enter monthly food: ", 0.0);
+    double savingsPercent = getInputDouble(input, "Enter savings percentage (ex: 20.5): ", 0.0);
+    double[] monthData = {salary, rent, car, gas, food, 0, 0, 0, savingsPercent};
+    
+    // Get savings percent
+    
+    // Get savings and fun based off salary and savingsPercent
+    monthData = updateDisposableIncome(monthData);
+    
+    return monthData;
+  }
+  
+  /*
+  Function Name:	getYear
+  Description:	  Get values for an entire year
+  Parameters:     input: allows program to grab values from cmd line - input/export
+                  yearData: 2-d array representing the table for the year - export
+                  monthData: array representing the data for this month - input/export
+  Return Value:	  double[][] - the data for this year
+  */
+  public static double[][] getYear(Scanner input, double[][] yearData, double[] monthData){
+    // {salary, rent, car, gas, food, percentage}
+    boolean[] categoryChanged = new boolean[9];
+    
+    boolean exitFlag = false;
     for(int month = 1; month < 12; month++){
       // check if user wants to exit
       if (exitFlag){
@@ -38,13 +119,11 @@ public class program2dnr {
       // display data so far
       printYear(yearData, month);
       
-      // Let user update values. return yearValue? but I have to handle exitFlag
-      boolean continueFlag = false;
+      // Let user update categories
       String choice = "";
-      do{  
-        
-        // Throw warning that 
-        checkTotal(monthData);
+      do{
+        // Throw warning that this month's costs exceed salary
+        checkTotal(monthData);        
         
         // display menu
         System.out.println("\nChoose a category to change:");
@@ -86,7 +165,7 @@ public class program2dnr {
             categoryChanged[8] = true;
             break;
           case "v":
-            printCurrentMonth(monthData, month);
+            printMonth(monthData, month);
             break;
           case "y":
             printYear(yearData, month);
@@ -99,14 +178,116 @@ public class program2dnr {
         }
       } while (!choice.equals("n") && !choice.equals("e"));
       
-      // Add new values to this thing
+      // Add new values for this month
       yearData = updateMonth(yearData, monthData, month);
       continue;
     }
-    printYear(yearData, 12);
+    return yearData;
   }
   
-  public static void printCurrentMonth(double[] monthData, int month){
+  /*
+  Function Name:	updateCategory
+  Description:	  Updates the value for a category for a given month
+  Parameters:     input: allows program to grab values from cmd line - input/export
+                  monthData: array representing the data for this month - export
+                  categoryChanged: array of categories that have been changed - input/export
+                  category: index for the chosen category
+  Return Value:	  double[] - the data for this month
+  */
+  public static double[] updateCategory(Scanner input, double[] monthData, boolean[] categoryChanged, int category){
+    // Check if category has already been changed
+    if (categoryChanged[category]){
+      System.out.println("You have already changed that category this year");
+      return monthData; 
+    }
+    
+    // Get name for category
+    String[] categoryNames = {"salary", "rent", "car", "gas", "food",
+                              "savings", "fun", "total", "savings percentage"};
+    String categoryName = categoryNames[category];
+    
+    // Get new value for the category
+    double num = getInputDouble(input, "Enter a value for " + categoryName + " : ", 0.0);
+    monthData[category] = num;
+    
+    // Update fun, savings, total
+    monthData = updateDisposableIncome(monthData);
+    return monthData;
+  }
+  
+  /*
+  Function Name:	updateDisposableIncome
+  Description:	  grabs the disposable income and updates values in monthData array
+  Parameters:     monthData: array representing the data for this month - input/export
+  Return Value:	  double[][] - the data for this year
+  */
+  public static double[] updateDisposableIncome(double[] monthData){
+    // Get total cost of bills
+    double expenses = 0.0;
+    for(int category = 1; category < 5; category++){
+      expenses += monthData[category];
+    }
+    
+    // Get non-input values
+    double savingsPercent = monthData[8];
+    double disposableIncome = monthData[0] - expenses;
+    double savings = disposableIncome * (savingsPercent/100);
+    double fun = disposableIncome - savings;
+    
+    // Set savings and fun to 0 if they are broke 
+    if (disposableIncome < 0){
+      savings = 0;
+      fun = 0;
+    }
+    
+    // Get total and update values
+    double total = expenses + savings + fun;
+    monthData[5] = savings;
+    monthData[6] = fun;
+    monthData[7] = total;
+    monthData[8] = savingsPercent;
+    
+    return monthData;
+  }  
+  
+  /*
+  Function Name:	updateMonth
+  Description:	  updates the year table with this month's data
+  Parameters:     yearData: 2-d array representing data for the year - export
+                  monthData: array representing the data for this month - input
+                  month: index of this month
+  Return Value:	  double[][] - the data for this year
+  */
+  public static double[][] updateMonth(double[][] yearData, double[] monthData, int month){
+    monthData = updateDisposableIncome(monthData);
+    for(int category = 0; category < 8; category++){
+      yearData[category][month] = monthData[category];
+    }
+    return yearData;
+  }
+  
+  /*
+  Function Name:	checkTotal
+  Description:	  outputs a warning message if the costs exceed the salary
+  Parameters:     monthData: array representing the data for this month - input
+  Return Value:	  void
+  */  
+  public static void checkTotal(double[] monthData){
+    double salary = monthData[0];
+    double total = monthData[7];
+    if (salary < total){
+      System.out.println("> WARNING: current costs exceed salary");
+    }
+  }
+  
+  /*
+  Function Name:	printMonth
+  Description:	  outputs the values for the current month the user is working on
+  Parameters:     monthData: array representing the data for this month - input
+                  month: index of this month - input
+  Return Value:	  void
+  */ 
+  public static void printMonth(double[] monthData, int month){
     String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", 
                           "Aug", "Sep", "Oct", "Nov", "Dec"};
     String[] categoryNames = {"Salary", "Rent", "Car", "Gas", "Food",
@@ -118,41 +299,18 @@ public class program2dnr {
     // Print data
     for(int category = 0; category < 8; category++){
       System.out.print(categoryNames[category] + "\t");
-      System.out.print(monthData[category] + "\t");
+      System.out.printf("$%.2f", monthData[category]);
       System.out.println("");
     }
   }
   
-  public static void checkTotal(double[] monthData){
-    double savings = monthData[5];
-    double fun = monthData[6];
-    if (savings < 0 || fun < 0){
-      System.out.println("WARNING: current costs exceed salary");
-    }
-  }
-  
-  public static double[] updateCategory(Scanner input, double[] monthData, boolean[] categoryChanged, int category){
-    if (categoryChanged[category]){
-      System.out.println("You have already changed that category this year");
-      return monthData;
-    }
-    double num = getInputDouble(input, "- New value: ", 0.0);
-    if (num != -1){
-      monthData[category] = num;
-    }
-    monthData = updateDisposableIncome(monthData, monthData[8]);
-    input.nextLine();
-    return monthData;
-  }
-  
-  public static double[][] updateMonth(double[][] yearData, double[] monthData, int month){
-    monthData = updateDisposableIncome(monthData, monthData[8]);
-    for(int category = 0; category < 8; category++){
-      yearData[category][month] = monthData[category];
-    }
-    return yearData;
-  }
-  
+  /*
+  Function Name:	printYear
+  Description:	  outputs the data for the whole year
+  Parameters:     yearData: 2-d array representing the data for this year - input    
+                  month: index of this month to print up to - input
+  Return Value:	  void
+  */ 
   public static void printYear(double[][] yearData, int month){
     String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", 
                           "Aug", "Sep", "Oct", "Nov", "Dec"};
@@ -163,7 +321,7 @@ public class program2dnr {
     System.out.print("Cat.\t");
     // Print month names
     for(int i = 0; i < month; i++){
-      System.out.print(monthNames[i] + "\t");
+      System.out.printf("%-11s",monthNames[i]);
     }
     System.out.println("");
     
@@ -171,67 +329,11 @@ public class program2dnr {
     for(int category = 0; category < 8; category++){
       System.out.print(categoryNames[category] + "\t");
       for(int i = 0; i < month; i++){
-        System.out.print(yearData[category][i] + "\t");
+        double value = yearData[category][i];
+        String value2 = String.format("%s%-10.2f", "$", value); // limit to 9 chars
+        System.out.print(value2);
       }
       System.out.println("");
     }
-  }
-  
-  public static double[] updateDisposableIncome(double[] monthData, double savingsPercent){
-    double expenses = 0.0;
-    for(int category = 1; category < 5; category++){
-      expenses += monthData[category];
-    }
-    double disposableIncome = monthData[0] - expenses;
-    double savings = disposableIncome * (savingsPercent/100);
-    double fun = disposableIncome - savings;
-    double total = expenses + savings + fun;
-    monthData[5] = savings;
-    monthData[6] = fun;
-    monthData[7] = total;
-    monthData[8] = savingsPercent;
-    
-    return monthData;
-  }
-  
-  public static double[] getFirstMonth(Scanner input){
-    double salary = getInputDouble(input, "Enter monthly salary: ", 0.0);
-    double rent = getInputDouble(input, "Enter monthly rent: ", 0.0);
-    double car = getInputDouble(input, "Enter monthly car: ", 0.0);
-    double gas = getInputDouble(input, "Enter monthly gas: ", 0.0);
-    double food = getInputDouble(input, "Enter monthly food: ", 0.0);
-    double[] monthData = {salary, rent, car, gas, food, 0, 0, 0, 0};
-    
-    // Get savings percent
-    double savingsPercent = getInputDouble(input, "Enter savings percentage (ex: 20.5): ", 0.0);
-    
-    // Get savings and fun based off salary and savingsPercent
-    monthData = updateDisposableIncome(monthData, savingsPercent);
-    
-    return monthData;
-  }
-  
-  public static double getInputDouble(Scanner input, String prompt, double minValue){
-    double num = 0.0;
-    // Loop until valid input
-    while (true){
-      try {
-        System.out.print(prompt);
-        num = input.nextDouble();
-        
-        // validate input
-        if (num >= minValue){
-          break;
-        } 
-        else{
-          System.out.println("> ERROR: Please enter a number greater than " + minValue);
-        }
-      } 
-      catch (Exception e){
-        System.out.println("> ERROR: Please enter a double");
-        input.nextLine(); // Removes input from the line, assume one-line input
-      }
-    }
-    return num;
   }
 }
