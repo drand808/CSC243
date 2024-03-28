@@ -7,19 +7,18 @@ public class MonthBudget {
   // Initial variables
   private int month = 0;
   private double percentForSavings = 0;
-  private double income = 0;  
-  private double rent = 0;
-  private double car = 0;
-  private double gas = 0;
-  private double food = 0;
+  private double income = 0;
   private double savings = 0;
   private double fun = 0;
-  private double total;
+  private double total = 0;
+  // rent, car, gas, food
+  private Expense[] = new Expenses[4];
   
   static final String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", 
                           "Aug", "Sep", "Oct", "Nov", "Dec"};
   
   public MonthBudget(){
+    
   }
   
   // income, rent, car, gas, food
@@ -28,14 +27,15 @@ public class MonthBudget {
     this.month = month;
     this.percentForSavings = percentForSavings;
     this.income = income;
-    this.rent = rent;
-    this.car = car;
-    this.gas = gas;
-    this.food = food;
+    expenses[0] = new Expense("Rent", rent);
+    expenses[0] = new Expense("Car", car);
+    expenses[0] = new Expense("Gas", gas);
+    expenses[0] = new Expense("Food", food);
     calculateDisposables();
   }
   
   public MonthBudget(int month, MonthBudget monthData){
+    /*
     this.month = month;
     this.income = monthData.getIncome();
     this.percentForSavings = monthData.getPercentForSavings();
@@ -46,10 +46,14 @@ public class MonthBudget {
     this.savings = monthData.getSavings();
     this.fun = monthData.getFun();
     this.total = monthData.getTotal();
+    */
   }
   
   public void calculateDisposables(){
-    double cost = rent + car + gas + food;
+    double cost = 0;
+    for(int i = 0; i < expenses.length; i++){
+      cost += expenses[i].getCost();
+    }
     double disposableIncome = income - cost;
     
     // Set savings and fun to 0 if they are broke 
@@ -77,20 +81,8 @@ public class MonthBudget {
     return this.income;
   }
   
-  public double getRent(){
-    return this.rent;
-  }
-  
-  public double getCar(){
-    return this.car;
-  }
-  
-  public double getGas(){
-    return this.gas;
-  }
-  
-  public double getFood(){
-    return this.food;
+  public Expenses getExpenses(){
+    return this.Expenses;
   }
   
   public double getSavings(){
@@ -105,9 +97,8 @@ public class MonthBudget {
     return this.total;
   }
   
-  public double[] getExpenses(){
-    double[] expenses = {this.income, this.rent, this.car, this.gas, this.food, this.savings, this.fun, this.total};
-    return expenses;
+  public String getMonthName(){
+    return monthNames[month];
   }
   
   // Setters
@@ -126,24 +117,12 @@ public class MonthBudget {
     calculateDisposables();
   }
   
-  public void setRent(double rent){
-    this.rent = rent;
-    calculateDisposables();
+  public void setExpense(int expenseIdx, Expense expense){
+    expenses[expenseIdx] = expense;
   }
   
-  public void setCar(double car){
-    this.car = car;
-    calculateDisposables();
-  }
-  
-  public void setGas(double gas){
-    this.gas = gas;
-    calculateDisposables();
-  }
-  
-  public void setFood(double food){
-    this.food = food;
-    calculateDisposables();
+  public void setExpenses(int expenseIdx, Expenses[] expense){
+    this.expenses = expenses;
   }
   
   public void setSavings(double savings){
@@ -157,7 +136,7 @@ public class MonthBudget {
   public void setTotal(double total){
     this.total = total;
   }
-  
+  // MODIFY THIS
   public void setByCategory(int category, double value){
     switch(category){
       case 0:

@@ -111,7 +111,7 @@ public class program3dnr {
             categoryChanged[5] = true;
             break;
           case "v":
-            //printMonth(monthData, month);
+            printMonth(month, monthData);
             break;
           case "y":
             printYear(month, yearData);
@@ -129,8 +129,24 @@ public class program3dnr {
     }
     return yearData;
   }
-  public 
   
+  public static void printMonth(int month, MonthBudget monthData){
+    String[] categoryNames = {"Salary", "Rent", "Car", "Gas", "Food",
+                              "Savings", "Fun", "Total"};
+    System.out.println("\nTable for Next Month");
+    System.out.println("----------------------");
+    System.out.println("Cat.\t" + monthData.getMonthName());
+    
+    // Grab category data
+    double[] expenses = monthData.getExpenses();
+    
+    // Print data
+    for(int category = 0; category < 8; category++){
+      System.out.print(categoryNames[category] + "\t");
+      System.out.printf("$%.2f", expenses[category]);
+      System.out.println("");
+    }
+  }
   
   public static MonthBudget updateCategory(Scanner input, MonthBudget monthData, boolean[] categoryChanged, int category){
     // Check if category has already been changed
