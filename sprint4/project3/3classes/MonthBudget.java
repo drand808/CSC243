@@ -12,13 +12,12 @@ public class MonthBudget {
   private double fun = 0;
   private double total = 0;
   // rent, car, gas, food
-  private Expense[] = new Expenses[4];
+  private Expense[] expenses = new Expense[4];
   
   static final String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", 
                           "Aug", "Sep", "Oct", "Nov", "Dec"};
   
   public MonthBudget(){
-    
   }
   
   // income, rent, car, gas, food
@@ -28,25 +27,20 @@ public class MonthBudget {
     this.percentForSavings = percentForSavings;
     this.income = income;
     expenses[0] = new Expense("Rent", rent);
-    expenses[0] = new Expense("Car", car);
-    expenses[0] = new Expense("Gas", gas);
-    expenses[0] = new Expense("Food", food);
+    expenses[1] = new Expense("Car", car);
+    expenses[2] = new Expense("Gas", gas);
+    expenses[3] = new Expense("Food", food);
     calculateDisposables();
   }
   
   public MonthBudget(int month, MonthBudget monthData){
-    /*
     this.month = month;
     this.income = monthData.getIncome();
     this.percentForSavings = monthData.getPercentForSavings();
-    this.rent = monthData.getRent();
-    this.car = monthData.getCar();
-    this.gas = monthData.getGas();
-    this.food = monthData.getFood();
+    this.expenses = monthData.getExpenses();
     this.savings = monthData.getSavings();
     this.fun = monthData.getFun();
     this.total = monthData.getTotal();
-    */
   }
   
   public void calculateDisposables(){
@@ -81,8 +75,8 @@ public class MonthBudget {
     return this.income;
   }
   
-  public Expenses getExpenses(){
-    return this.Expenses;
+  public Expense[] getExpenses(){
+    return this.expenses;
   }
   
   public double getSavings(){
@@ -99,6 +93,19 @@ public class MonthBudget {
   
   public String getMonthName(){
     return monthNames[month];
+  }
+  
+  public double[] getAllValues(){
+    double[] arr = new double[expenses.length+4];
+    int i = 0;
+    arr[i++] = income;
+    for(; i < expenses.length+1; i++){
+      arr[i] = expenses[i-1].getCost();
+    }
+    arr[i++] = savings;
+    arr[i++] = fun;
+    arr[i++] = total;
+    return arr;
   }
   
   // Setters
@@ -119,10 +126,12 @@ public class MonthBudget {
   
   public void setExpense(int expenseIdx, Expense expense){
     expenses[expenseIdx] = expense;
+    calculateDisposables();
   }
   
-  public void setExpenses(int expenseIdx, Expenses[] expense){
+  public void setExpenses(Expense[] expense){
     this.expenses = expenses;
+    calculateDisposables();
   }
   
   public void setSavings(double savings){
@@ -136,23 +145,23 @@ public class MonthBudget {
   public void setTotal(double total){
     this.total = total;
   }
-  // MODIFY THIS
+  
   public void setByCategory(int category, double value){
     switch(category){
       case 0:
         setIncome(value);
         break;
       case 1:
-        setRent(value);
+        expenses[0].setCost(value);
         break;
       case 2:
-        setCar(value);
+        expenses[1].setCost(value);
         break;
       case 3:
-        setGas(value);
+        expenses[2].setCost(value);
         break;
       case 4:
-        setFood(value);
+        expenses[3].setCost(value);
         break;
       case 5:
         setPercentageForSavings(value);
@@ -160,5 +169,6 @@ public class MonthBudget {
       default:
         System.out.println("Invalid category");
     }
+    calculateDisposables();
   }
 }

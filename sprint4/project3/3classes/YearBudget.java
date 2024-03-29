@@ -7,9 +7,6 @@ public class YearBudget {
   // Initial variables
   private MonthBudget[] months = new MonthBudget[12];
   
-  static final String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", 
-                          "Aug", "Sep", "Oct", "Nov", "Dec"};
-  
   public YearBudget(){
   }
   

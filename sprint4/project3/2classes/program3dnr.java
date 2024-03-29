@@ -156,8 +156,7 @@ public class program3dnr {
     }
     
     // Get name for category
-    String[] categoryNames = {"salary", "rent", "car", "gas", "food",
-                              "savings", "fun", "total", "savings percentage"};
+    String[] categoryNames = {"salary", "rent", "car", "gas", "food", "savings percentage"};
     String categoryName = categoryNames[category];
     
     // Get new value for the category

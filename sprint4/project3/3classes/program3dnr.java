@@ -13,8 +13,8 @@ Purpose:       Takes in the users monthly income and costs, then goes through ev
 */
 
 /*
-Estimate time: 300 minutes (5 hours)
-Actual time: 
+Estimate time: 300 minutes (5 hours) 
+Actual time: 4 hours (2class implementation), 5 hours total (class implementation)
 */
 
 /* TO-DO: 
@@ -22,6 +22,7 @@ Actual time:
  - show the current month's values
  - add headers to all class files
  - look into expense class?
+ - check total
 */
 
 import java.util.Scanner;
@@ -48,8 +49,11 @@ public class program3dnr {
   }
   
   public static YearBudget getYear(Scanner input, YearBudget yearData){
-    // {salary, rent, car, gas, food, percentage} 
-    boolean[] categoryChanged = new boolean[6];
+    // 
+    String[] categoryNames = {"Salary", "Rent", "Car", "Gas", "Food",
+                              "Savings", "Fun", "Total"};
+    // subtract for savings, fun, total. add for percentage
+    boolean[] categoryChanged = new boolean[categoryNames.length-2];
     boolean exitFlag = false;
     
     for(int month = 1; month < 12; month++){      
@@ -62,7 +66,7 @@ public class program3dnr {
         continue;
       }
       
-      // Display table for the year
+      // Show data so far
       printYear(month, yearData);
       
       // Let user update categories
@@ -70,6 +74,9 @@ public class program3dnr {
       do{
         // Throw warning that this month's costs exceed salary
         //checkTotal(monthData);        
+        
+        // Control which category to changed
+        int categoryIdx = -1;
         
         // display menu
         System.out.println("\nChoose a category to change:");
@@ -87,31 +94,25 @@ public class program3dnr {
         choice = input.nextLine();
         switch(choice.toLowerCase()) {
           case "s":
-            monthData = updateCategory(input, monthData, categoryChanged, 0);
-            categoryChanged[0] = true;
+            categoryIdx = 0;
             break;
           case "r":
-            monthData = updateCategory(input, monthData, categoryChanged, 1);
-            categoryChanged[1] = true;
+            categoryIdx = 1;
             break;
           case "c":
-            monthData = updateCategory(input, monthData, categoryChanged, 2);
-            categoryChanged[2] = true;
+            categoryIdx = 2;
             break;
           case "g":
-            monthData = updateCategory(input, monthData, categoryChanged, 3);
-            categoryChanged[3] = true;
+            categoryIdx = 3;
             break;
           case "f":
-            monthData = updateCategory(input, monthData, categoryChanged, 4);
-            categoryChanged[4] = true;
+            categoryIdx = 4;
             break;
           case "p":
-            monthData = updateCategory(input, monthData, categoryChanged, 5);
-            categoryChanged[5] = true;
+            categoryIdx = 5;
             break;
           case "v":
-            printMonth(month, monthData);
+            printMonth(month, monthData, categoryNames);
             break;
           case "y":
             printYear(month, yearData);
@@ -122,6 +123,11 @@ public class program3dnr {
           default:
             System.out.println("Please enter a valid value, got " + choice);
         }
+        // Change category value if selected
+        if(categoryIdx != -1){
+          monthData = updateCategory(input, categoryIdx, monthData, categoryChanged, categoryNames);
+          categoryChanged[categoryIdx] = true;
+        }
       } while (!choice.equals("n") && !choice.equals("e"));
       
       // Set month in the year
@@ -130,38 +136,37 @@ public class program3dnr {
     return yearData;
   }
   
-  public static void printMonth(int month, MonthBudget monthData){
-    String[] categoryNames = {"Salary", "Rent", "Car", "Gas", "Food",
-                              "Savings", "Fun", "Total"};
+  public static void printMonth(int month, MonthBudget monthData, String[] categoryNames){
     System.out.println("\nTable for Next Month");
     System.out.println("----------------------");
     System.out.println("Cat.\t" + monthData.getMonthName());
     
-    // Grab category data
-    double[] expenses = monthData.getExpenses();
-    
     // Print data
-    for(int category = 0; category < 8; category++){
+    double[] tableData = monthData.getAllValues();
+    for(int category = 0; category < categoryNames.length; category++){
       System.out.print(categoryNames[category] + "\t");
-      System.out.printf("$%.2f", expenses[category]);
+      System.out.printf("$%.2f", tableData[category]);
       System.out.println("");
     }
   }
   
-  public static MonthBudget updateCategory(Scanner input, MonthBudget monthData, boolean[] categoryChanged, int category){
+  public static MonthBudget updateCategory(Scanner input, int category, MonthBudget monthData, boolean[] categoryChanged, String[] categoryNames){
     // Check if category has already been changed
     if (categoryChanged[category]){
       System.out.println("You have already changed that category this year");
       return monthData;
     }
     
-    // Get name for category
-    String[] categoryNames = {"salary", "rent", "car", "gas", "food",
-                              "savings", "fun", "total", "savings percentage"};
-    String categoryName = categoryNames[category];
-    
+    // Put percentage after expenses, add 1 for salary
+    String categoryName = "";
+    if(category == monthData.getExpenses().length+1){
+      categoryName = "Percentage for Savings";
+    } else {
+      categoryName = categoryNames[category];
+    }
+
     // Get new value for the category
-    double num = getInputDouble(input, "Enter a value for " + categoryName + ": ", 0.0);
+    double num = getInputDouble(input, "Enter a value for " + categoryName.toLowerCase() + ": ", 0.0);
     monthData.setByCategory(category, num);
     return monthData;
   }
@@ -182,15 +187,20 @@ public class program3dnr {
     System.out.println("");
     
     // Print data
-    for(int category = 0; category < 8; category++){
+    for(int category = 0; category < categoryNames.length; category++){
       System.out.print(categoryNames[category] + "\t");
       for(int month = 0; month < currMonth; month++){
-        double value = yearData.getMonth(month).getExpenses()[category];
-        String value2 = String.format("%s%-10.2f", "$", value); // limit to 9 chars
-        System.out.print(value2);
+        double data = yearData.getMonth(month).getAllValues()[category];
+        double value = data;
+        printCurrency(value);
       }
       System.out.println("");
     }
+  }
+  
+  public static void printCurrency(double value){
+    String message = String.format("%s%-10.2f", "$", value); // limit to 9 chars
+    System.out.print(message);
   }
   
   public static MonthBudget getFirstMonth(Scanner input){
