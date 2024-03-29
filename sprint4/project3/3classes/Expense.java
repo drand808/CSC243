@@ -1,5 +1,13 @@
 /*
-HEADER
+Author:        Dominic Rando
+Major:         Computer Science
+Creation Date: March 25, 2024
+Due Date:      April  1, 2024
+Course:        CSC 243
+Professor:     Dr. DeMarco
+Assignment:    Program 3
+Filename:      Expense.java
+Purpose:       Class for storing information about an expense
 */
 
 public class Expense {
@@ -8,10 +16,17 @@ public class Expense {
   private String name = "UNASSIGNED";
   private double cost = 0;
   
+  // Default constructor
   public Expense(){
   }
   
-  // income, rent, car, gas, food
+  /*
+  Function Name:	Expense
+  Description:	  Constructor for class when given data
+  Parameters:     name: name of this expense
+                  cost: value for this expense
+  Return Value:	  None
+  */
   public Expense(String name, double cost){
     this.name = name;
     this.cost = cost;

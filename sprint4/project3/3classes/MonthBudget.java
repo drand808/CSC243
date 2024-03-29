@@ -1,5 +1,13 @@
 /*
-HEADER
+Author:        Dominic Rando
+Major:         Computer Science
+Creation Date: March 25, 2024
+Due Date:      April  1, 2024
+Course:        CSC 243
+Professor:     Dr. DeMarco
+Assignment:    Program 3
+Filename:      MonthBudget.java
+Purpose:       Class for storing budget data for a month
 */
 
 public class MonthBudget {
@@ -17,10 +25,22 @@ public class MonthBudget {
   static final String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", 
                           "Aug", "Sep", "Oct", "Nov", "Dec"};
   
+  /*
+  Function Name:	MonthBudget
+  Description:	  Default Constructor
+  Parameters:     None
+  Return Value:	  None
+  */
   public MonthBudget(){
   }
   
-  // income, rent, car, gas, food
+  /*
+  Function Name:	MonthBudget
+  Description:	  Constructor for class when given data
+  Parameters:     month: number of the year for this month
+                  all others: data values for class
+  Return Value:	  None
+  */
   public MonthBudget(int month, double income, double rent, double car, 
                       double gas, double food, double percentForSavings){
     this.month = month;
@@ -33,6 +53,13 @@ public class MonthBudget {
     calculateDisposables();
   }
   
+  /*
+  Function Name:	MonthBudget
+  Description:	  Copy constructor for class
+  Parameters:     month: number of the year for this month
+                  monthData: the class to copy from
+  Return Value:	  None
+  */
   public MonthBudget(int month, MonthBudget monthData){
     this.month = month;
     this.income = monthData.getIncome();
@@ -43,6 +70,12 @@ public class MonthBudget {
     this.total = monthData.getTotal();
   }
   
+  /*
+  Function Name:	calculateDisposables
+  Description:	  Sets the values of savings, fun, and total using percentForSavings
+  Parameters:     None
+  Return Value:	  None
+  */
   public void calculateDisposables(){
     double cost = 0;
     for(int i = 0; i < expenses.length; i++){
@@ -95,6 +128,12 @@ public class MonthBudget {
     return monthNames[month];
   }
   
+  /*
+  Function Name:	getAllValues
+  Description:	  returns salary, expenses, and all other information as an array
+  Parameters:     None
+  Return Value:	  double[] - array with all printable information
+  */
   public double[] getAllValues(){
     double[] arr = new double[expenses.length+4];
     int i = 0;
@@ -146,6 +185,13 @@ public class MonthBudget {
     this.total = total;
   }
   
+  /*
+  Function Name:	setByCategory
+  Description:	  Sets value based on category index
+  Parameters:     category: category index 
+                  value: value to change that variable to
+  Return Value:	  None
+  */
   public void setByCategory(int category, double value){
     switch(category){
       case 0:

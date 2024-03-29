@@ -1,28 +1,25 @@
 /*
 Author:        Dominic Rando
 Major:         Computer Science
-Creation Date: February 20, 2024
-Due Date:      February 28, 2024
+Creation Date: March 25, 2024
+Due Date:      April  1, 2024
 Course:        CSC 243
 Professor:     Dr. DeMarco
-Assignment:    Program 2
-Filename:      program1dnr.java
+Assignment:    Program 3
+Filename:      program3dnr.java
 Purpose:       Takes in the users monthly income and costs, then goes through every month
                letting them make changes as needed. Then, the program will
-               display the values for the entire year
+               display the values for the entire year. Implemented with classes
 */
 
 /*
-Estimate time: 300 minutes (5 hours) 
-Actual time: 4 hours (2class implementation), 5 hours total (class implementation)
-*/
-
-/* TO-DO: 
- - change salary to income
- - show the current month's values
- - add headers to all class files
- - look into expense class?
- - check total
+Estimate implementation time: 300 minutes (5 hours) 
+ - All other aspects were completed already/in-class
+Actual time: 4 hours (2class implementation), 6 hours total (class implementation)
+At first, I implemented this with two classes, MonthBudget and YearBudget
+Then, I tried adding an expense class. this made it modular but more complicated
+I am still not satisfied with the modularity. I want the program to supply a list of 
+categories so that the user can enter their own categories
 */
 
 import java.util.Scanner;
@@ -48,8 +45,14 @@ public class program3dnr {
     printYear(12, yearData);
   }
   
+  /*
+  Function Name:	getYear
+  Description:	  Get values for an entire year
+  Parameters:     input: allows program to grab values from cmd line - input/export
+                  yearData: the data for the year - export
+  Return Value:	  YearBudget - the data for the year
+  */
   public static YearBudget getYear(Scanner input, YearBudget yearData){
-    // 
     String[] categoryNames = {"Salary", "Rent", "Car", "Gas", "Food",
                               "Savings", "Fun", "Total"};
     // subtract for savings, fun, total. add for percentage
@@ -73,7 +76,7 @@ public class program3dnr {
       String choice = "";
       do{
         // Throw warning that this month's costs exceed salary
-        //checkTotal(monthData);        
+        checkTotal(monthData);        
         
         // Control which category to changed
         int categoryIdx = -1;
@@ -136,6 +139,28 @@ public class program3dnr {
     return yearData;
   }
   
+  /*
+  Function Name:	checkTotal
+  Description:	  outputs a warning message if the costs exceed the salary
+  Parameters:     monthData: array representing the data for this month - input
+  Return Value:	  void
+  */  
+  public static void checkTotal(MonthBudget monthData){
+    double income = monthData.getIncome();
+    double total = monthData.getTotal();
+    if (income < total){
+      System.out.println("> WARNING: current costs exceed salary");
+    }
+  }
+  
+  /*
+  Function Name:	printMonth
+  Description:	  outputs the values for the current month the user is working on
+  Parameters:     month: index of this month - input
+                  monthData: the data for this month - input
+                  categoryNames: array of the names for every category
+  Return Value:	  void
+  */ 
   public static void printMonth(int month, MonthBudget monthData, String[] categoryNames){
     System.out.println("\nTable for Next Month");
     System.out.println("----------------------");
@@ -150,6 +175,16 @@ public class program3dnr {
     }
   }
   
+  /*
+  Function Name:	updateCategory
+  Description:	  Updates the value for a category for a given month
+  Parameters:     input: allows program to grab values from cmd line - input/export
+                  category: index for the chosen category
+                  monthData: The data for this month - export
+                  categoryChanged: array of categories that have been changed - input
+                  categoryNames: array of the names for every category
+  Return Value:	  MonthBudget - the data for this month
+  */
   public static MonthBudget updateCategory(Scanner input, int category, MonthBudget monthData, boolean[] categoryChanged, String[] categoryNames){
     // Check if category has already been changed
     if (categoryChanged[category]){
@@ -171,6 +206,13 @@ public class program3dnr {
     return monthData;
   }
   
+  /*
+  Function Name:	printYear
+  Description:	  outputs the data for the whole year
+  Parameters:     currMonth: index of the month to print up to - input
+                  yearData: The data for this year - input    
+  Return Value:	  void
+  */ 
   public static void printYear(int currMonth, YearBudget yearData){
     String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", 
                           "Aug", "Sep", "Oct", "Nov", "Dec"};
@@ -198,11 +240,23 @@ public class program3dnr {
     }
   }
   
+  /*
+  Function Name:	printCurrency
+  Description:	  Helper method for printing a value as currency
+  Parameters:     value - number to print as USD
+  Return Value:	  void - none
+  */
   public static void printCurrency(double value){
     String message = String.format("%s%-10.2f", "$", value); // limit to 9 chars
     System.out.print(message);
   }
   
+  /*
+  Function Name:	getFirstMonth
+  Description:	  Gets value for each category for the first month
+  Parameters:     input: allows program to grab values from cmd line - input/export
+  Return Value:	  MonthBudget - the data for this month
+  */
   public static MonthBudget getFirstMonth(Scanner input){
     double salary = getInputDouble(input, "Enter monthly salary: ", 0.0);
     double rent = getInputDouble(input, "Enter monthly rent: ", 0.0);
@@ -248,6 +302,12 @@ public class program3dnr {
     return num;
   }
   
+  /*
+  Function Name:	printWelcomeMessage
+  Description:	  Tells user program is running
+  Parameters:     None
+  Return Value:	  void - none
+  */
   public static void printWelcomeMessage(){
     System.out.println("------------------------");
     System.out.println("Yearly Budget Calculator");
