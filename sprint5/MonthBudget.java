@@ -1,11 +1,11 @@
 /*
 Author:        Dominic Rando
 Major:         Computer Science
-Creation Date: March 25, 2024
-Due Date:      April  1, 2024
+Creation Date: April 11, 2024
+Due Date:      April 10, 2024
 Course:        CSC 243
 Professor:     Dr. DeMarco
-Assignment:    Program 3
+Assignment:    Program 4
 Filename:      MonthBudget.java
 Purpose:       Class for storing budget data for a month
 */

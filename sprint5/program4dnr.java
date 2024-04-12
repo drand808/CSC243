@@ -1,30 +1,20 @@
 /*
 Author:        Dominic Rando
 Major:         Computer Science
-Creation Date: March 25, 2024
-Due Date:      April  1, 2024
+Creation Date: Arpil 11, 2024
+Due Date:      April 10, 2024
 Course:        CSC 243
 Professor:     Dr. DeMarco
-Assignment:    Program 3
-Filename:      program3dnr.java
+Assignment:    Program 4
+Filename:      program4dnr.java
 Purpose:       Takes in the users monthly income and costs, then goes through every month
                letting them make changes as needed. Then, the program will
                display the values for the entire year. Implemented with classes
 */
 
-/*
-Estimate implementation time: 300 minutes (5 hours) 
- - All other aspects were completed already/in-class
-Actual time: 4 hours (2class implementation), 6 hours total (class implementation)
-At first, I implemented this with two classes, MonthBudget and YearBudget
-Then, I tried adding an expense class. this made it modular but more complicated
-I am still not satisfied with the modularity. I want the program to supply a list of 
-categories so that the user can enter their own categories
-*/
-
 import java.util.Scanner;
 
-public class program3dnr {
+public class program4dnr {
   public static void main(String[] args) { 
     // Welcome Message
     printWelcomeMessage();
