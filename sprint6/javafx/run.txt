@@ -1,0 +1,5 @@
+to compile:
+javacfx myjavafx/MyJavaFX.java
+
+To run:
+javafx myjavafx/MyJavaFX.java

@@ -1,0 +1,5 @@
+Compile from project folder (eventually add manifest):
+javacfx src/mainscene.java
+
+To run:
+javafx -cp src mainscene
