@@ -1,7 +1,5 @@
 package myjavafx;
 
-// public class MyJavaFX {
-
 import javafx.application.Application;
 
 import javafx.scene.Scene;
@@ -29,8 +27,6 @@ public class MyJavaFX extends Application {
     primaryStage.show(); // Display the stage
 
   }
-
- 
 
   /**
 
