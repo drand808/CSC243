@@ -54,7 +54,7 @@ public class BudgetUI extends Application {
         expenses[1] = new Expense("Car", car);
         expenses[2] = new Expense("Gas", gas);
         expenses[3] = new Expense("Food", food);
-        System.out.println("Rent: " + rent);
+
         january.setIncome(monthlyIncome);
         january.setExpenses(expenses);
         january.setPercentageForSavings(percent);
@@ -64,7 +64,7 @@ public class BudgetUI extends Application {
         //primaryStage.setScene(scene2);
         //primaryStage.show();
         YearBudget yearData = new YearBudget(january);
-        Scene2 test = new Scene2(yearData);
+        Scene2 test = new Scene2(primaryStage, yearData);
         //test.populateData("Data from Scene 1");
         primaryStage.setScene(test.getScene());
         //Stage second = getNewStage();

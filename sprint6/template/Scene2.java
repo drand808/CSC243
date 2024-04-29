@@ -35,7 +35,7 @@ public class Scene2 {
     static final String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", 
                           "Aug", "Sep", "Oct", "Nov", "Dec"};
 
-    public Scene2(YearBudget yearData) {
+    public Scene2(Stage primaryStage, YearBudget yearData) {
       // Data from last scene. Should have January filled in
       this.yearData = yearData;
       
@@ -66,6 +66,14 @@ public class Scene2 {
         // if currMonth >= 12: open new scene, pass yearData. display table
         lblMonthName.setText(monthNames[currMonth]);
       });
+      
+      btnExit.setOnAction(e -> {
+        for(; currMonth < 12; currMonth++){
+          yearData.setMonth(currMonth, monthData);
+        }
+        YearScene yearScene = new YearScene(yearData);
+        primaryStage.setScene(yearScene.getScene());
+      });
     }
 
     public Scene getScene() {
@@ -90,7 +98,6 @@ public class Scene2 {
       String[] dataString = new String[8];
       for(int i = 0; i < dataDouble.length; i++){
         String strNum = String.valueOf(dataDouble[i]);
-        System.out.println(strNum);
         dataString[i] = strNum;
       }
       tfOldMonthlyIncome.setText(dataString[0]);
@@ -108,7 +115,6 @@ public class Scene2 {
       for(int i = 0; i < dataDouble.length; i++){
         String strNum = String.valueOf(dataDouble[i]);
         System.out.println(strNum);
-        dataString[i] = strNum;
       }
       tfNewMonthlyIncome.setText(dataString[0]);
       tfNewRent.setText(dataString[1]);
