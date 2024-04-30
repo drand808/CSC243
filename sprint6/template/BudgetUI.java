@@ -39,13 +39,20 @@ public class BudgetUI extends Application {
     //MonthBudget january = null;
     btInitial.setOnAction(e -> {
       // Get values from TextFields
-      Double monthlyIncome = Double.parseDouble(tfMonthlyIncome.getText());
-      Double rent = Double.parseDouble(tfRent.getText());
-      Double car = Double.parseDouble(tfCar.getText());
-      Double gas = Double.parseDouble(tfGas.getText());
-      Double food = Double.parseDouble(tfFood.getText());
-      Double percent = Double.parseDouble(tfPercent.getText());
-
+      Double monthlyIncome = 0.0, rent = 0.0, car = 0.0, gas = 0.0, food = 0.0, percent = 0.0;
+      try {
+        monthlyIncome = Double.parseDouble(tfMonthlyIncome.getText());
+        rent = Double.parseDouble(tfRent.getText());
+        car = Double.parseDouble(tfCar.getText());
+        gas = Double.parseDouble(tfGas.getText());
+        food = Double.parseDouble(tfFood.getText());
+        percent = Double.parseDouble(tfPercent.getText());
+      }
+      catch (Exception ex){
+        System.out.println("> ERROR: Please enter a double");
+        WarningPopup doubleError = new WarningPopup(0);
+        return;
+      }
       // Setup Expense array being put into month
       Expense[] expenses = new Expense[4];
       expenses[0] = new Expense("Rent", rent);

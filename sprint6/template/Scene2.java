@@ -13,7 +13,7 @@ import javafx.scene.text.Text;
 
 /*
 Update YearData class to handle checking of changing multiple categories
-Show currency values, especially for savings, fun, total
+ - make the textfield uneditable
 Update data for textField after they've left it
 Set month button should turn into the YearScene
 Add "restart" button to YearScene. Should take you back to BudgetUI scene.
@@ -86,13 +86,25 @@ public class Scene2 {
 
     // Event handler for updating the TextField
     btnSetMonth.setOnAction(e -> {
-      //tfNewCar.setText("Button Click");
       monthData = getNewMonthData(currMonth);
       yearData.setMonth(currMonth, monthData);
       populateOldData(monthData);
       populateNewData(monthData);
+      changeUsedCategories();
       currMonth++;
-      // if currMonth >= 12: open new scene, pass yearData. display table
+      if(currMonth == 12){
+        YearScene yearScene = new YearScene(primaryStage, yearData);
+        primaryStage.setScene(yearScene.getScene());
+        return;
+      }
+      if(allCategoriesChanged()){
+        for(; currMonth < 12; currMonth++){
+        yearData.setMonth(currMonth, monthData);
+        }
+        YearScene yearScene = new YearScene(primaryStage, yearData);
+        primaryStage.setScene(yearScene.getScene());
+        return;
+      }
       lblMonthName.setText(monthNames[currMonth]);
     });
     
@@ -100,7 +112,7 @@ public class Scene2 {
       for(; currMonth < 12; currMonth++){
         yearData.setMonth(currMonth, monthData);
       }
-      YearScene yearScene = new YearScene(yearData);
+      YearScene yearScene = new YearScene(primaryStage, yearData);
       primaryStage.setScene(yearScene.getScene());
     });
   }
@@ -126,7 +138,7 @@ public class Scene2 {
     double[] dataDouble = monthData.getAllValues();
     String[] dataString = new String[8];
     for(int i = 0; i < dataDouble.length; i++){
-      String strNum = String.valueOf(dataDouble[i]);
+      String strNum = getCurrencyFromDouble(dataDouble[i]);
       dataString[i] = strNum;
     }
     txtOldMonthlyIncome.setText(dataString[0]);
@@ -134,10 +146,11 @@ public class Scene2 {
     txtOldCar.setText(dataString[2]);
     txtOldGas.setText(dataString[3]);
     txtOldFood.setText(dataString[4]);
-    txtOldPercent.setText(getCurrencyFromDouble(monthData.getPercentForSavings()));
-    txtOldSavings.setText(String.valueOf(monthData.getSavings()));
-    txtOldFun.setText(String.valueOf(monthData.getFun()));
-    txtOldTotal.setText(String.valueOf(monthData.getTotal()));
+    String dataStr = String.format("%.2f%%", monthData.getPercentForSavings());
+    txtOldPercent.setText(dataStr);
+    txtOldSavings.setText(dataString[5]);
+    txtOldFun.setText(dataString[6]);
+    txtOldTotal.setText(dataString[7]);
   }
   
   public void populateNewData(MonthBudget monthData) {
@@ -145,7 +158,8 @@ public class Scene2 {
     double[] dataDouble = monthData.getAllValues();
     String[] dataString = new String[8];
     for(int i = 0; i < dataDouble.length; i++){
-      String strNum = String.valueOf(dataDouble[i]);
+      //String strNum = String.valueOf(dataDouble[i]);
+      String strNum = getTextfieldFormatFromDouble(dataDouble[i]);
       dataString[i] = strNum;
     }
     tfNewMonthlyIncome.setText(dataString[0]);
@@ -153,18 +167,19 @@ public class Scene2 {
     tfNewCar.setText(dataString[2]);
     tfNewGas.setText(dataString[3]);
     tfNewFood.setText(dataString[4]);
-    tfNewPercent.setText(String.valueOf(monthData.getPercentForSavings()));
+    tfNewPercent.setText(getTextfieldFormatFromDouble(monthData.getPercentForSavings()));
   }
   
   public void addNodes(GridPane gridPane){
     int currRow = -1; // keep track of row position while adding nodes
+    
     // Headings
     // btn.add(col, row, colspan, rowspan)
     gridPane.add(lblMonthName, 0, ++currRow, 3, 1);
     gridPane.add(lblHeadingOld, 1, ++currRow);
     gridPane.add(lblHeadingNew, 2, currRow);
     
-    // Add old and new columns to gridpane
+    // Old and new columns
     gridPane.add(new Label("Monthly Income:"), 0, ++currRow);
     gridPane.add(txtOldMonthlyIncome, 1, currRow);
     gridPane.add(tfNewMonthlyIncome, 2, currRow);
@@ -226,7 +241,58 @@ public class Scene2 {
   }
   
   public String getCurrencyFromDouble(double num){
-    String dataStr = String.format("%s%-10.2f", "$", num);
+    String dataStr = String.format("%s%.2f", "$", num);
     return dataStr;
+  }
+  
+  public String getTextfieldFormatFromDouble(double num){
+    String dataStr = String.format("%.2f", num);
+    return dataStr;
+  }
+  
+  // Love this function
+  public void changeUsedCategories(){
+    TextField[] categoryTextFields = new TextField[5];
+    categoryTextFields[0] = tfNewMonthlyIncome;
+    categoryTextFields[1] = tfNewRent;
+    categoryTextFields[2] = tfNewCar;
+    categoryTextFields[3] = tfNewGas;
+    categoryTextFields[4] = tfNewFood;
+    
+    // income, rent, car, gas, food, savings, fun, total
+    double[] oldMonthDataArr = yearData.getMonth(currMonth-1).getAllValues();
+    double[] newMonthData = monthData.getAllValues();
+    
+    // Check expense categories
+    for(int category = 0; category < oldMonthDataArr.length-3; category++){
+      // this category was changed
+      if(oldMonthDataArr[category] != newMonthData[category]){
+        System.out.println("Category changed at idx: " + category);
+        categoryTextFields[category].setEditable(false);
+      }
+    }
+    
+    // Check percentage
+    if(yearData.getMonth(currMonth-1).getPercentForSavings() !=
+        monthData.getPercentForSavings()){
+      tfNewPercent.setEditable(false);
+    }
+  }
+  
+  public boolean allCategoriesChanged(){
+    TextField[] categoryTextFields = new TextField[6];
+    categoryTextFields[0] = tfNewMonthlyIncome;
+    categoryTextFields[1] = tfNewRent;
+    categoryTextFields[2] = tfNewCar;
+    categoryTextFields[3] = tfNewGas;
+    categoryTextFields[4] = tfNewFood;
+    categoryTextFields[5] = tfNewPercent;
+    
+    for(int category = 0; category < categoryTextFields.length; category++){
+      if(categoryTextFields[category].isEditable()){
+        return false;
+      }
+    }
+    return true;
   }
 }
