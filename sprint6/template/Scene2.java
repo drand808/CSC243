@@ -31,12 +31,12 @@ public class Scene2 {
   private Label lblHeadingNew = new Label("Next Month");
   
   // Old column
-  private TextField tfOldMonthlyIncome = new TextField();
-  private TextField tfOldRent = new TextField();
-  private TextField tfOldCar = new TextField();
-  private TextField tfOldGas = new TextField();
-  private TextField tfOldFood = new TextField();
-  private TextField tfOldPercent = new TextField();
+  private Text txtOldMonthlyIncome = new Text();
+  private Text txtOldRent = new Text();
+  private Text txtOldCar = new Text();
+  private Text txtOldGas = new Text();
+  private Text txtOldFood = new Text();
+  private Text txtOldPercent = new Text();
   private Text txtOldSavings = new Text();
   private Text txtOldFun = new Text();
   private Text txtOldTotal = new Text();
@@ -129,12 +129,12 @@ public class Scene2 {
       String strNum = String.valueOf(dataDouble[i]);
       dataString[i] = strNum;
     }
-    tfOldMonthlyIncome.setText(dataString[0]);
-    tfOldRent.setText(dataString[1]);
-    tfOldCar.setText(dataString[2]);
-    tfOldGas.setText(dataString[3]);
-    tfOldFood.setText(dataString[4]);
-    tfOldPercent.setText(String.valueOf(monthData.getPercentForSavings()));
+    txtOldMonthlyIncome.setText(dataString[0]);
+    txtOldRent.setText(dataString[1]);
+    txtOldCar.setText(dataString[2]);
+    txtOldGas.setText(dataString[3]);
+    txtOldFood.setText(dataString[4]);
+    txtOldPercent.setText(String.valueOf(monthData.getPercentForSavings()));
     txtOldSavings.setText(String.valueOf(monthData.getSavings()));
     txtOldFun.setText(String.valueOf(monthData.getFun()));
     txtOldTotal.setText(String.valueOf(monthData.getTotal()));
@@ -167,22 +167,22 @@ public class Scene2 {
     
     // Text fields
     gridPane.add(new Label("Monthly Income:"), 0, ++currRow);
-    gridPane.add(tfOldMonthlyIncome, 1, currRow);
+    gridPane.add(txtOldMonthlyIncome, 1, currRow);
     gridPane.add(tfNewMonthlyIncome, 2, currRow);
     gridPane.add(new Label("Rent:"), 0, ++currRow);
-    gridPane.add(tfOldRent, 1, currRow);
+    gridPane.add(txtOldRent, 1, currRow);
     gridPane.add(tfNewRent, 2, currRow);
     gridPane.add(new Label("Car:"), 0, ++currRow);
-    gridPane.add(tfOldCar, 1, currRow);
+    gridPane.add(txtOldCar, 1, currRow);
     gridPane.add(tfNewCar, 2, currRow);
     gridPane.add(new Label("Gas:"), 0, ++currRow);
-    gridPane.add(tfOldGas, 1, currRow);
+    gridPane.add(txtOldGas, 1, currRow);
     gridPane.add(tfNewGas, 2, currRow);
     gridPane.add(new Label("Food:"), 0, ++currRow);
-    gridPane.add(tfOldFood, 1, currRow);
+    gridPane.add(txtOldFood, 1, currRow);
     gridPane.add(tfNewFood, 2, currRow);
     gridPane.add(new Label("Savings Percent:"), 0, ++currRow);
-    gridPane.add(tfOldPercent, 1, currRow);
+    gridPane.add(txtOldPercent, 1, currRow);
     gridPane.add(tfNewPercent, 2, currRow);
     gridPane.add(new Label("Savings:"), 0, ++currRow);
     gridPane.add(txtOldSavings, 1, currRow);
@@ -211,25 +211,36 @@ public class Scene2 {
     GridPane.setHalignment(lblHeadingOld, HPos.CENTER);
     
     // Text fields
-    tfOldMonthlyIncome.setAlignment(Pos.BOTTOM_RIGHT);
-    tfOldRent.setAlignment(Pos.BOTTOM_RIGHT);
-    tfOldCar.setAlignment(Pos.BOTTOM_RIGHT);
-    tfOldGas.setAlignment(Pos.BOTTOM_RIGHT);
-    tfOldFood.setAlignment(Pos.BOTTOM_RIGHT);
-    tfOldPercent.setAlignment(Pos.BOTTOM_RIGHT);
+    // MAKE CHANGE
+    /*
+    txtOldMonthlyIncome.setAlignment(Pos.BOTTOM_RIGHT);
+    txtOldRent.setAlignment(Pos.BOTTOM_RIGHT);
+    txtOldCar.setAlignment(Pos.BOTTOM_RIGHT);
+    txtOldGas.setAlignment(Pos.BOTTOM_RIGHT);
+    txtOldFood.setAlignment(Pos.BOTTOM_RIGHT);
+    txtOldPercent.setAlignment(Pos.BOTTOM_RIGHT);
+    */
     
     // Text
+    GridPane.setHalignment(txtOldMonthlyIncome, HPos.CENTER);
+    GridPane.setHalignment(txtOldRent, HPos.CENTER);
+    GridPane.setHalignment(txtOldCar, HPos.CENTER);
+    GridPane.setHalignment(txtOldGas, HPos.CENTER);
+    GridPane.setHalignment(txtOldFood, HPos.CENTER);
+    GridPane.setHalignment(txtOldPercent, HPos.CENTER);
     GridPane.setHalignment(txtOldSavings, HPos.CENTER);
     GridPane.setHalignment(txtOldFun, HPos.CENTER);
     GridPane.setHalignment(txtOldTotal, HPos.CENTER);
     
     // Old textfields have last month data, user cannot edit
+    /*
     tfOldMonthlyIncome.setEditable(false);
     tfOldRent.setEditable(false);
     tfOldCar.setEditable(false);
     tfOldGas.setEditable(false);
     tfOldFood.setEditable(false);
     tfOldPercent.setEditable(false);
+    */
     
     // Buttons
     GridPane.setHalignment(btnSetMonth, HPos.CENTER);
