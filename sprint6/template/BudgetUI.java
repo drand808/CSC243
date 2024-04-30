@@ -37,40 +37,37 @@ public class BudgetUI extends Application {
     primaryStage.show(); // Display the stage
     
     //MonthBudget january = null;
-    btInitial.setOnAction(new EventHandler<ActionEvent>() {
-      @Override
-      public void handle(ActionEvent event) {
-        // Get values from TextFields
-        Double monthlyIncome = Double.parseDouble(tfMonthlyIncome.getText());
-        Double rent = Double.parseDouble(tfRent.getText());
-        Double car = Double.parseDouble(tfCar.getText());
-        Double gas = Double.parseDouble(tfGas.getText());
-        Double food = Double.parseDouble(tfFood.getText());
-        Double percent = Double.parseDouble(tfPercent.getText());
+    btInitial.setOnAction(e -> {
+      // Get values from TextFields
+      Double monthlyIncome = Double.parseDouble(tfMonthlyIncome.getText());
+      Double rent = Double.parseDouble(tfRent.getText());
+      Double car = Double.parseDouble(tfCar.getText());
+      Double gas = Double.parseDouble(tfGas.getText());
+      Double food = Double.parseDouble(tfFood.getText());
+      Double percent = Double.parseDouble(tfPercent.getText());
 
-        // Setup Expense array being put into month
-        Expense[] expenses = new Expense[4];
-        expenses[0] = new Expense("Rent", rent);
-        expenses[1] = new Expense("Car", car);
-        expenses[2] = new Expense("Gas", gas);
-        expenses[3] = new Expense("Food", food);
+      // Setup Expense array being put into month
+      Expense[] expenses = new Expense[4];
+      expenses[0] = new Expense("Rent", rent);
+      expenses[1] = new Expense("Car", car);
+      expenses[2] = new Expense("Gas", gas);
+      expenses[3] = new Expense("Food", food);
 
-        january.setIncome(monthlyIncome);
-        january.setExpenses(expenses);
-        january.setPercentageForSavings(percent);
-        january.calculateDisposables();
-        //primaryStage.close();
-        
-        //primaryStage.setScene(scene2);
-        //primaryStage.show();
-        YearBudget yearData = new YearBudget(january);
-        Scene2 test = new Scene2(primaryStage, yearData);
-        //test.populateData("Data from Scene 1");
-        primaryStage.setScene(test.getScene());
-        //Stage second = getNewStage();
-        //second.show();
-        //second.show();
-      }
+      january.setIncome(monthlyIncome);
+      january.setExpenses(expenses);
+      january.setPercentageForSavings(percent);
+      january.calculateDisposables();
+      //primaryStage.close();
+      
+      //primaryStage.setScene(scene2);
+      //primaryStage.show();
+      YearBudget yearData = new YearBudget(january);
+      Scene2 test = new Scene2(primaryStage, yearData);
+      //test.populateData("Data from Scene 1");
+      primaryStage.setScene(test.getScene());
+      //Stage second = getNewStage();
+      //second.show();
+      //second.show();
     });
     
     

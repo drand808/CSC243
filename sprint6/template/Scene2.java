@@ -114,7 +114,8 @@ public class Scene2 {
       String[] dataString = new String[8];
       for(int i = 0; i < dataDouble.length; i++){
         String strNum = String.valueOf(dataDouble[i]);
-        System.out.println(strNum);
+        dataString[i] = strNum;
+        //System.out.println(strNum);
       }
       tfNewMonthlyIncome.setText(dataString[0]);
       tfNewRent.setText(dataString[1]);
