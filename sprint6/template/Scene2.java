@@ -134,7 +134,7 @@ public class Scene2 {
     txtOldCar.setText(dataString[2]);
     txtOldGas.setText(dataString[3]);
     txtOldFood.setText(dataString[4]);
-    txtOldPercent.setText(String.valueOf(monthData.getPercentForSavings()));
+    txtOldPercent.setText(getCurrencyFromDouble(monthData.getPercentForSavings()));
     txtOldSavings.setText(String.valueOf(monthData.getSavings()));
     txtOldFun.setText(String.valueOf(monthData.getFun()));
     txtOldTotal.setText(String.valueOf(monthData.getTotal()));
@@ -147,7 +147,6 @@ public class Scene2 {
     for(int i = 0; i < dataDouble.length; i++){
       String strNum = String.valueOf(dataDouble[i]);
       dataString[i] = strNum;
-      //System.out.println(strNum);
     }
     tfNewMonthlyIncome.setText(dataString[0]);
     tfNewRent.setText(dataString[1]);
@@ -165,7 +164,7 @@ public class Scene2 {
     gridPane.add(lblHeadingOld, 1, ++currRow);
     gridPane.add(lblHeadingNew, 2, currRow);
     
-    // Text fields
+    // Add old and new columns to gridpane
     gridPane.add(new Label("Monthly Income:"), 0, ++currRow);
     gridPane.add(txtOldMonthlyIncome, 1, currRow);
     gridPane.add(tfNewMonthlyIncome, 2, currRow);
@@ -210,17 +209,6 @@ public class Scene2 {
     GridPane.setHalignment(lblHeadingNew, HPos.CENTER);
     GridPane.setHalignment(lblHeadingOld, HPos.CENTER);
     
-    // Text fields
-    // MAKE CHANGE
-    /*
-    txtOldMonthlyIncome.setAlignment(Pos.BOTTOM_RIGHT);
-    txtOldRent.setAlignment(Pos.BOTTOM_RIGHT);
-    txtOldCar.setAlignment(Pos.BOTTOM_RIGHT);
-    txtOldGas.setAlignment(Pos.BOTTOM_RIGHT);
-    txtOldFood.setAlignment(Pos.BOTTOM_RIGHT);
-    txtOldPercent.setAlignment(Pos.BOTTOM_RIGHT);
-    */
-    
     // Text
     GridPane.setHalignment(txtOldMonthlyIncome, HPos.CENTER);
     GridPane.setHalignment(txtOldRent, HPos.CENTER);
@@ -232,18 +220,13 @@ public class Scene2 {
     GridPane.setHalignment(txtOldFun, HPos.CENTER);
     GridPane.setHalignment(txtOldTotal, HPos.CENTER);
     
-    // Old textfields have last month data, user cannot edit
-    /*
-    tfOldMonthlyIncome.setEditable(false);
-    tfOldRent.setEditable(false);
-    tfOldCar.setEditable(false);
-    tfOldGas.setEditable(false);
-    tfOldFood.setEditable(false);
-    tfOldPercent.setEditable(false);
-    */
-    
     // Buttons
     GridPane.setHalignment(btnSetMonth, HPos.CENTER);
     GridPane.setHalignment(btnExit, HPos.CENTER);
+  }
+  
+  public String getCurrencyFromDouble(double num){
+    String dataStr = String.format("%s%-10.2f", "$", num);
+    return dataStr;
   }
 }
