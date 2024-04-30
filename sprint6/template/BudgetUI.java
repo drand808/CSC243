@@ -141,34 +141,30 @@ public class BudgetUI extends Application {
     primaryStage.show(); // Display the stage
     
     //MonthBudget january = null;
-    btInitial.setOnAction(new EventHandler<ActionEvent>() {
-      @Override
-      public void handle(ActionEvent event) {
-          // Get values from TextFields
-          Double monthlyIncome = Double.parseDouble(tfMonthlyIncome.getText());
-          Double rent = Double.parseDouble(tfRent.getText());
-          Double car = Double.parseDouble(tfCar.getText());
-          Double gas = Double.parseDouble(tfGas.getText());
-          Double food = Double.parseDouble(tfFood.getText());
+    btInitial.setOnAction(e -> {
+      // Get values from TextFields
+      Double monthlyIncome = Double.parseDouble(tfMonthlyIncome.getText());
+      Double rent = Double.parseDouble(tfRent.getText());
+      Double car = Double.parseDouble(tfCar.getText());
+      Double gas = Double.parseDouble(tfGas.getText());
+      Double food = Double.parseDouble(tfFood.getText());
 
-          // Display the values (You can replace this with any logic you want)
-          Expense[] expenses = new Expense[4];
-          expenses[0] = new Expense("Rent", rent);
-          expenses[1] = new Expense("Car", car);
-          expenses[2] = new Expense("Gas", gas);
-          expenses[3] = new Expense("Food", food);
-          january.setIncome(monthlyIncome);
-          january.setExpenses(expenses);
-          january.calculateDisposables();
-          primaryStage.close();
-          
-          primaryStage.setScene(scene2);
-          primaryStage.show();
-          //Stage second = getNewStage();
-          //second.show();
-          //second.show();
-      }
+      // Display the values (You can replace this with any logic you want)
+      Expense[] expenses = new Expense[4];
+      expenses[0] = new Expense("Rent", rent);
+      expenses[1] = new Expense("Car", car);
+      expenses[2] = new Expense("Gas", gas);
+      expenses[3] = new Expense("Food", food);
+      january.setIncome(monthlyIncome);
+      january.setExpenses(expenses);
+      january.calculateDisposables();
+      primaryStage.close();
+      
+      primaryStage.setScene(scene2);
+      primaryStage.show();
+      //Stage second = getNewStage();
+      //second.show();
+      //second.show();
     });
-  }
-  
+  } 
 }

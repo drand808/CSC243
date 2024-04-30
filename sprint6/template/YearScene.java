@@ -53,7 +53,7 @@ public class YearScene {
       }
 
       // Create Scene
-      scene = new Scene(gridPane, 1000, 400);
+      scene = new Scene(gridPane, 1300, 300);
     }
 
     public Scene getScene() {
