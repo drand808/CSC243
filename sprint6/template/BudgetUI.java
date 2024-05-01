@@ -53,6 +53,20 @@ public class BudgetUI extends Application {
         WarningPopup doubleError = new WarningPopup(0);
         return;
       }
+      
+      // Check percentage
+      if(percent > 100 || percent < 0){
+        System.out.println("> ERROR: Please enter a percentage between 0 and 100");
+        WarningPopup doubleError = new WarningPopup(1);
+        return;
+      }
+      
+      if(checkInputIsNegative(monthlyIncome, rent, car, gas, food)){
+        System.out.println("> ERROR: Please enter positive numbers");
+        WarningPopup doubleError = new WarningPopup(0);
+        return;
+      }
+      
       // Setup Expense array being put into month
       Expense[] expenses = new Expense[4];
       expenses[0] = new Expense("Rent", rent);
@@ -64,20 +78,20 @@ public class BudgetUI extends Application {
       january.setExpenses(expenses);
       january.setPercentageForSavings(percent);
       january.calculateDisposables();
-      //primaryStage.close();
       
-      //primaryStage.setScene(scene2);
-      //primaryStage.show();
       YearBudget yearData = new YearBudget(january);
       Scene2 test = new Scene2(primaryStage, yearData);
-      //test.populateData("Data from Scene 1");
       primaryStage.setScene(test.getScene());
-      //Stage second = getNewStage();
-      //second.show();
-      //second.show();
     });
-    
-    
+  }
+  
+  public boolean checkInputIsNegative(double... variables){
+    for(double var : variables){
+      if (var < 0){
+        return true;
+      }
+    }
+    return false;
   }
 
   public static void main(String[] args) {
@@ -91,7 +105,8 @@ public class BudgetUI extends Application {
     gridPane.setHgap(5);
     gridPane.setVgap(5);
     int currRow = -1;
-    // btn.add(col, row, colspan, rowspan)
+    
+    // add(col, row, colspan, rowspan)
     gridPane.add(lblWelcomeMsg, 0, ++currRow, 2, 1);
     gridPane.add(new Label("Monthly Income:"), 0, ++currRow);
     gridPane.add(tfMonthlyIncome, 1, currRow);
@@ -107,7 +122,6 @@ public class BudgetUI extends Application {
     gridPane.add(new Label("Savings Percent:"), 0, ++currRow);
     gridPane.add(tfPercent, 1, currRow);
     gridPane.add(btInitial, 0, ++currRow, 2, 1);
-    //GridPane.setRowSpan(btCalculate, 5);
 
     // Set properties for UI
     GridPane.setHalignment(lblWelcomeMsg, HPos.CENTER);

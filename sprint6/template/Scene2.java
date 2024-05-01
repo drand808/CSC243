@@ -10,6 +10,8 @@ import javafx.stage.Stage;
 import javafx.event.ActionEvent; 
 import javafx.event.EventHandler;
 import javafx.scene.text.Text;
+import javafx.scene.text.Font;
+import javafx.scene.paint.Color;
 
 /*
 Update YearData class to handle checking of changing multiple categories
@@ -29,6 +31,7 @@ public class Scene2 {
   private Label lblMonthName = new Label("[MONTH]");
   private Label lblHeadingOld = new Label("Last Month");
   private Label lblHeadingNew = new Label("Next Month");
+  private Label lblOverIncome = new Label();
   
   // Old column
   private Text txtOldMonthlyIncome = new Text();
@@ -54,7 +57,7 @@ public class Scene2 {
   
   // Buttons
   private Button btnSetMonth = new Button("Set Month");
-  private Button btnExit = new Button("Exit");
+  private Button btnSetYear = new Button("Set Year");
   
   // Helper variables
   static final String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", 
@@ -108,7 +111,10 @@ public class Scene2 {
       lblMonthName.setText(monthNames[currMonth]);
     });
     
-    btnExit.setOnAction(e -> {
+    btnSetYear.setOnAction(e -> {
+      monthData = getNewMonthData(currMonth);
+      yearData.setMonth(currMonth, monthData);
+      currMonth++;
       for(; currMonth < 12; currMonth++){
         yearData.setMonth(currMonth, monthData);
       }
@@ -122,14 +128,50 @@ public class Scene2 {
   }
   
   public MonthBudget getNewMonthData(int currMonth){
-    // Grab from text fields
-    Double monthlyIncome = Double.parseDouble(tfNewMonthlyIncome.getText());
-    Double rent = Double.parseDouble(tfNewRent.getText());
-    Double car = Double.parseDouble(tfNewCar.getText());
-    Double gas = Double.parseDouble(tfNewGas.getText());
-    Double food = Double.parseDouble(tfNewFood.getText());
-    Double percent = Double.parseDouble(tfNewPercent.getText());
-
+    Double monthlyIncome = 0.0, rent = 0.0, car = 0.0, gas = 0.0, food = 0.0, percent = 0.0;
+    int badCategory = 0;
+    try {
+      // Grab from text fields
+      monthlyIncome = Double.parseDouble(tfNewMonthlyIncome.getText());
+      badCategory++;
+      rent = Double.parseDouble(tfNewRent.getText());
+      badCategory++;
+      car = Double.parseDouble(tfNewCar.getText());
+      badCategory++;
+      gas = Double.parseDouble(tfNewGas.getText());
+      badCategory++;
+      food = Double.parseDouble(tfNewFood.getText());
+      badCategory++;
+      percent = Double.parseDouble(tfNewPercent.getText());
+      badCategory++;
+    }
+    
+    catch(Exception ex){
+      System.out.println("> ERROR: Please enter a double");
+      WarningPopup doubleError = new WarningPopup(0);
+      switch(badCategory){
+        case 0:
+          tfNewMonthlyIncome.setText("0");
+          break;
+        case 1:
+          tfNewRent.setText("0");
+          break;
+        case 2:
+          tfNewCar.setText("0");
+          break;
+        case 3:
+          tfNewGas.setText("0");
+          break;
+        case 4:
+          tfNewFood.setText("0");
+          break;
+        case 5:
+          tfNewPercent.setText("0");
+          break;
+      }
+      return monthData;
+    }
+    
     return new MonthBudget(currMonth, monthlyIncome, rent, car, gas, food, percent);
   }
 
@@ -168,6 +210,7 @@ public class Scene2 {
     tfNewGas.setText(dataString[3]);
     tfNewFood.setText(dataString[4]);
     tfNewPercent.setText(getTextfieldFormatFromDouble(monthData.getPercentForSavings()));
+    populateNewDisposable();
   }
   
   public void addNodes(GridPane gridPane){
@@ -207,10 +250,48 @@ public class Scene2 {
     gridPane.add(new Label("Total:"), 0, ++currRow);
     gridPane.add(txtOldTotal, 1, currRow);
     gridPane.add(txtNewTotal, 2, currRow);
+    gridPane.add(lblOverIncome, 0, ++currRow, 3, 1);
+    
+    // Focus listeners - update values after users clicks out of a textfield
+    addFocusListener(tfNewMonthlyIncome);
+    addFocusListener(tfNewRent);
+    addFocusListener(tfNewCar);
+    addFocusListener(tfNewGas);
+    addFocusListener(tfNewFood);
+    addFocusListener(tfNewPercent);
     
     // Buttons
     gridPane.add(btnSetMonth, 0, ++currRow, 3, 1);
-    gridPane.add(btnExit, 0, ++currRow, 3, 1);
+    gridPane.add(btnSetYear, 0, ++currRow, 3, 1);
+  }
+  
+  public void addFocusListener(TextField textField) {
+    textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+      // Focus lost
+      if (!newValue) {
+          populateNewDisposable();
+      }
+    });
+  }
+  
+  public void populateNewDisposable(){
+    monthData = getNewMonthData(currMonth);
+    txtNewSavings.setText(getCurrencyFromDouble(monthData.getSavings()));
+    txtNewFun.setText(getCurrencyFromDouble(monthData.getFun()));
+    txtNewTotal.setText(getCurrencyFromDouble(monthData.getTotal()));
+    checkOverIncome(monthData);
+  }
+  
+  public void checkOverIncome(MonthBudget monthData){
+    double income = monthData.getIncome();
+    double total = monthData.getTotal();
+    if (income < total){
+      System.out.println("> WARNING: current costs exceed salary");
+      lblOverIncome.setText("WARNING: current costs exceed salary");
+    }
+    else {
+      lblOverIncome.setText("");
+    }
   }
   
   public void setupProperties(GridPane gridPane){
@@ -235,9 +316,13 @@ public class Scene2 {
     GridPane.setHalignment(txtOldFun, HPos.CENTER);
     GridPane.setHalignment(txtOldTotal, HPos.CENTER);
     
+    // Labels
+    lblOverIncome.setFont(new Font("Arial Bold", 15));
+    lblOverIncome.setTextFill(Color.color(1,0,0));
+    
     // Buttons
     GridPane.setHalignment(btnSetMonth, HPos.CENTER);
-    GridPane.setHalignment(btnExit, HPos.CENTER);
+    GridPane.setHalignment(btnSetYear, HPos.CENTER);
   }
   
   public String getCurrencyFromDouble(double num){
@@ -250,7 +335,6 @@ public class Scene2 {
     return dataStr;
   }
   
-  // Love this function
   public void changeUsedCategories(){
     TextField[] categoryTextFields = new TextField[5];
     categoryTextFields[0] = tfNewMonthlyIncome;

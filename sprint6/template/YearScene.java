@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.text.Text;
 import java.text.NumberFormat;
+import javafx.scene.text.Font;
 
 public class YearScene {
   private Scene scene;

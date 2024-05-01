@@ -14,6 +14,7 @@ import java.text.NumberFormat;
 import javafx.stage.Modality;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Font;
+import javafx.scene.paint.Color;
 
 public class WarningPopup {
   private Stage stage;
@@ -37,7 +38,11 @@ public class WarningPopup {
     switch(error){
       // Not double
       case 0:
-        message = "Please make sure you are inputting numbers";
+        message = "Please make sure you are inputting positive numbers";
+        gridPane.add(btnOkay, 0, 2);
+        break;
+      case 1:
+        message = "Please enter a percentage between 0 and 100";
         gridPane.add(btnOkay, 0, 2);
         break;
       default:
@@ -54,7 +59,7 @@ public class WarningPopup {
     // Error message
     Label lblMessage = new Label(message);
     gridPane.add(lblMessage, 0, 1);
-    scene = new Scene(gridPane, 300, 200);
+    scene = new Scene(gridPane, 350, 200);
     GridPane.setHalignment(lblMessage, HPos.CENTER);
     
     // Display the stage
